@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk – MOTIS | DJKA Kemenhub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: var(--color-bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Auth Layout ──────────────────────────────────── */
+    .auth-page {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      min-height: 100vh;
+    }
+
+    /* Left panel – brand */
+    .auth-brand {
+      background: linear-gradient(160deg, var(--color-topbar-bg) 0%, #1a2d6b 100%);
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-brand::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 600px 500px at 60% 40%, rgba(37,99,235,.25), transparent);
+      pointer-events: none;
+    }
+    .auth-brand::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .auth-brand-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .auth-brand-top .brand-name { color: #fff; font-size: 18px; font-weight: 800; }
+    .auth-brand-top .brand-sub  { color: rgba(255,255,255,.4); font-size: 11px; }
+
+    .auth-brand-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      padding: 20px 0;
+    }
+    .auth-brand-tagline {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -.5px;
+    }
+    .auth-brand-tagline span { color: #60A5FA; }
+    .auth-brand-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,.55);
+      line-height: 1.7;
+      max-width: 380px;
+      margin-bottom: 36px;
+    }
+    .auth-features { display: flex; flex-direction: column; gap: 14px; }
+    .auth-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+    }
+    .auth-feature-icon {
+      width: 32px; height: 32px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #60A5FA; flex-shrink: 0;
+    }
+    .auth-feature-icon svg { width: 16px; height: 16px; }
+    .auth-brand-footer {
+      position: relative; z-index: 1;
+      font-size: 12px; color: rgba(255,255,255,.25);
+    }
+
+    /* Right panel – form */
+    .auth-form-panel {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 44px;
+      border-left: 1px solid var(--color-border);
+    }
+    .auth-form-header { margin-bottom: 28px; }
+    .auth-form-title {
+      font-size: 24px; font-weight: 800;
+      color: var(--color-text); margin-bottom: 6px;
+    }
+    .auth-form-subtitle { font-size: 14px; color: var(--color-muted); }
+
+    .form-stack { display: flex; flex-direction: column; gap: 18px; }
+    .form-stack .btn-primary { width: 100%; height: 44px; font-size: 14.5px; margin-top: 4px; }
+
+    /* Input with icon */
+    .input-wrapper { position: relative; }
+    .input-icon-l {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray-400); pointer-events: none; display: flex;
+    }
+    .input-icon-l svg { width: 16px; height: 16px; }
+    .has-icon-l { padding-left: 40px; }
+
+    /* Password toggle */
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--gray-400); display: flex; padding: 4px; border-radius: 4px;
+    }
+    .pw-toggle:hover { color: var(--gray-600); }
+    .pw-toggle svg { width: 16px; height: 16px; }
+
+    /* Row flex */
+    .form-row-between { display: flex; align-items: center; justify-content: space-between; }
+    .forgot-link {
+      font-size: 13px; font-weight: 600; color: var(--color-primary);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-ui);
+    }
+    .forgot-link:hover { color: var(--color-primary-hover); text-decoration: underline; }
+
+    /* Checkbox */
+    .checkbox-row { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .checkbox-row input { width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer; }
+    .checkbox-label { font-size: 13.5px; color: var(--color-text); cursor: pointer; }
+
+    /* Alert */
+    .alert {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: var(--radius-card); font-size: 13.5px;
+    }
+    .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alert-danger { background: var(--color-danger-bg); border: 1px solid #FECACA; color: #991B1B; }
+
+    /* Auth footer */
+    .auth-footer { margin-top: 20px; text-align: center; }
+    .auth-footer p { font-size: 14px; color: var(--color-muted); }
+    .auth-footer a { font-weight: 600; color: var(--color-primary); }
+    .auth-footer a:hover { color: var(--color-primary-hover); }
+
+    /* Back link */
+    .back-home {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--color-muted); text-decoration: none;
+      margin-bottom: 28px; transition: color .15s;
+    }
+    .back-home:hover { color: var(--color-text); }
+    .back-home svg { width: 14px; height: 14px; }
+
+    /* ── Modal (Lupa Kata Sandi) ──────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(15,23,42,.55);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease;
+    }
+    .modal-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: #fff;
+      border-radius: var(--radius-modal);
+      padding: 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-xl);
+      transform: translateY(12px);
+      transition: transform .25s ease;
+      position: relative;
+    }
+    .modal-overlay.is-open .modal-box { transform: translateY(0); }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      background: var(--gray-100); border: none; cursor: pointer;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500); transition: background .15s;
+    }
+    .modal-close:hover { background: var(--gray-200); }
+    .modal-close svg { width: 14px; height: 14px; }
+    .modal-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .modal-icon.warning { background: var(--color-warning-bg); color: var(--color-warning); }
+    .modal-icon svg { width: 26px; height: 26px; }
+    .modal-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+    .modal-desc { font-size: 13.5px; color: var(--color-muted); text-align: center; line-height: 1.6; margin-bottom: 24px; }
+    .modal-success {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: var(--color-success-bg);
+      border: 1px solid #BBF7D0;
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      color: #14532D;
+    }
+    .modal-success svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: var(--color-success); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-brand { display: none; }
+      .auth-form-panel { padding: 40px 28px; min-height: 100vh; }
+    }
+    @media (max-width: 480px) {
+      .auth-form-panel { padding: 28px 20px; }
+    }
+
+    .hidden { display: none !important; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div class="auth-page">
+
+  <!-- Brand Left Panel -->
+  <div class="auth-brand">
+    <a href="index.html" class="auth-brand-top">
+      <img src="logo-kemenhub.png" alt="Logo Kemenhub" class="brand-logo-img">
+    </a>
+    <div class="auth-brand-content">
+      <h1 class="auth-brand-tagline">
+        Mudik Lebaran<br>
+        Lebih <span>Aman</span><br>
+        & Nyaman
+      </h1>
+      <p class="auth-brand-desc">
+        Masuk ke akun Anda untuk memantau status pendaftaran motor, mengunduh bukti peserta, dan melihat informasi keberangkatan MOTIS 2026.
+      </p>
+      <div class="auth-features">
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          Pantau status pendaftaran motor secara real-time
+        </div>
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          Unduh dokumen & bukti peserta program
+        </div>
+        <div class="auth-feature-item">
+          <div class="auth-feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          </div>
+          Jadwal dan rute keberangkatan terkini
+        </div>
+      </div>
+    </div>
+    <div class="auth-brand-footer">© 2026 Direktorat Jenderal Perkeretaapian, Kemenhub RI</div>
+  </div>
+
+  <!-- Form Right Panel -->
+  <div class="auth-form-panel">
+    <a href="index.html" class="back-home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Kembali ke Beranda
+    </a>
+
+    <div class="auth-form-header">
+      <h2 class="auth-form-title">Selamat Datang</h2>
+      <p class="auth-form-subtitle">Masuk menggunakan nomor telepon atau email terdaftar.</p>
+    </div>
+
+    <!-- Error alert -->
+    <div class="alert alert-danger hidden" id="loginAlert" style="margin-bottom:16px">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Nomor telepon/email atau kata sandi tidak sesuai. Periksa kembali dan coba lagi.</span>
+    </div>
+
+    <form class="form-stack" id="loginForm" novalidate>
+
+      <!-- Identity: No. HP atau Email -->
+      <div class="form-group">
+        <label class="form-label" for="identity">
+          No. Telepon atau Email <span class="required">*</span>
+        </label>
+        <div class="input-wrapper">
+          <span class="input-icon-l">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <input
+            class="form-input has-icon-l"
+            id="identity"
+            type="text"
+            name="identity"
+            autocomplete="username"
+            placeholder="Contoh: 08123456789 atau email@contoh.com"
+            required
+          >
+        </div>
+        <span class="form-error hidden" id="identityError">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Masukkan nomor telepon atau email yang valid.
+        </span>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div class="form-row-between">
+          <label class="form-label" for="password">Kata Sandi <span class="required">*</span></label>
+          <button type="button" class="forgot-link" id="forgotBtn">Lupa Kata Sandi?</button>
+        </div>
+        <div class="input-wrapper">
+          <input
+            class="form-input"
+            id="password"
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            placeholder="Masukkan kata sandi"
+            style="padding-right:44px"
+            required
+          >
+          <button type="button" class="pw-toggle" id="pwToggle" aria-label="Tampilkan kata sandi">
+            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeOffIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <span class="form-error hidden" id="passwordError">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Kata sandi tidak boleh kosong.
+        </span>
+      </div>
+
+      <!-- Remember me -->
+      <label class="checkbox-row">
+        <input type="checkbox" id="remember" name="remember">
+        <span class="checkbox-label">Ingat saya selama 30 hari</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Masuk
+      </button>
+
+      <div class="divider">atau</div>
+
+      <div class="auth-footer">
+        <p>Belum punya akun? <a href="register.html">Daftar Sekarang</a></p>
+      </div>
+
+      <p style="text-align:center;font-size:12px;color:var(--color-muted);">
+        Dengan masuk, Anda menyetujui
+        <a href="#" style="color:var(--color-muted);text-decoration:underline">Syarat & Ketentuan</a>
+        dan
+        <a href="#" style="color:var(--color-muted);text-decoration:underline">Kebijakan Privasi</a>
+        MOTIS.
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- ── Modal Lupa Kata Sandi ───────────────────────────── -->
+<div class="modal-overlay" id="forgotModal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Tutup">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="modal-icon warning">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h3 class="modal-title" id="forgotTitle">Lupa Kata Sandi?</h3>
+    <p class="modal-desc">
+      Masukkan email atau nomor telepon terdaftar. Kami akan mengirimkan tautan untuk mereset kata sandi Anda.
+    </p>
+
+    <!-- Reset form -->
+    <form id="forgotForm" novalidate style="display:flex;flex-direction:column;gap:14px;">
+      <div class="form-group">
+        <label class="form-label" for="resetIdentity">Email atau No. Telepon <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <span class="input-icon-l">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <input
+            class="form-input has-icon-l"
+            id="resetIdentity"
+            type="text"
+            placeholder="email@contoh.com atau 0812xxxx"
+          >
+        </div>
+        <span class="form-error hidden" id="resetError">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Kolom ini wajib diisi.
+        </span>
+      </div>
+      <button type="submit" class="btn btn-primary" id="resetBtn" style="height:42px;font-size:14px;width:100%;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Kirim Tautan Reset
+      </button>
+    </form>
+
+    <!-- Success message (hidden by default) -->
+    <div class="modal-success hidden" id="resetSuccess">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>Tautan reset kata sandi telah dikirim. Periksa email atau SMS Anda dalam beberapa menit.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Password toggle ──────────────────────────────────
+  const pwToggle = document.getElementById('pwToggle');
+  const pwInput  = document.getElementById('password');
+  pwToggle.addEventListener('click', () => {
+    const hidden = pwInput.type === 'password';
+    pwInput.type = hidden ? 'text' : 'password';
+    document.getElementById('eyeIcon').style.display   = hidden ? 'none' : '';
+    document.getElementById('eyeOffIcon').style.display = hidden ? '' : 'none';
+  });
+
+  // ── Login form ───────────────────────────────────────
+  const form        = document.getElementById('loginForm');
+  const identityEl  = document.getElementById('identity');
+  const passwordEl  = document.getElementById('password');
+  const identityErr = document.getElementById('identityError');
+  const passwordErr = document.getElementById('passwordError');
+  const loginAlert  = document.getElementById('loginAlert');
+  const submitBtn   = document.getElementById('submitBtn');
+
+  function setErr(input, errEl, show) {
+    input.classList.toggle('is-error', show);
+    errEl.classList.toggle('hidden', !show);
+  }
+
+  identityEl.addEventListener('blur', () => setErr(identityEl, identityErr, !identityEl.value.trim()));
+  passwordEl.addEventListener('blur', () => setErr(passwordEl, passwordErr, !passwordEl.value));
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    loginAlert.classList.add('hidden');
+    const idOk = !!identityEl.value.trim();
+    const pwOk = !!passwordEl.value;
+    setErr(identityEl, identityErr, !idOk);
+    setErr(passwordEl, passwordErr, !pwOk);
+    if (!idOk || !pwOk) return;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .7s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Memproses...`;
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Masuk`;
+      // Demo: simpan user ke localStorage dan redirect
+      const user = { identity: identityEl.value.trim(), loginAt: new Date().toISOString() };
+      localStorage.setItem('motis_user', JSON.stringify(user));
+      window.location.href = 'form-stepper.html';
+    }, 1200);
+  });
+
+  // ── Forgot password modal ────────────────────────────
+  const modal      = document.getElementById('forgotModal');
+  const forgotBtn  = document.getElementById('forgotBtn');
+  const modalClose = document.getElementById('modalClose');
+  const forgotForm = document.getElementById('forgotForm');
+  const resetErr   = document.getElementById('resetError');
+  const resetSucc  = document.getElementById('resetSuccess');
+  const resetBtn   = document.getElementById('resetBtn');
+  const resetInput = document.getElementById('resetIdentity');
+
+  function openModal() {
+    forgotForm.style.display = '';
+    resetSucc.classList.add('hidden');
+    resetErr.classList.add('hidden');
+    resetInput.value = '';
+    resetInput.classList.remove('is-error');
+    modal.classList.add('is-open');
+    resetInput.focus();
+  }
+  function closeModal() { modal.classList.remove('is-open'); }
+
+  forgotBtn.addEventListener('click', openModal);
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  forgotForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!resetInput.value.trim()) {
+      resetInput.classList.add('is-error');
+      resetErr.classList.remove('hidden');
+      return;
+    }
+    resetInput.classList.remove('is-error');
+    resetErr.classList.add('hidden');
+    resetBtn.disabled = true;
+    resetBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .7s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Mengirim...`;
+    setTimeout(() => {
+      forgotForm.style.display = 'none';
+      resetSucc.classList.remove('hidden');
+      resetBtn.disabled = false;
+      resetBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Kirim Tautan Reset`;
+    }, 1500);
+  });
+</script>
+</body>
+</html>

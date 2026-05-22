@@ -1,0 +1,3155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Perjalanan MOTIS 2026 – DJKA Kemenhub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: var(--color-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Stepper Header Layout ────────────────────────── */
+    .stepper-header-section {
+      background: #fff;
+      border-bottom: 1px solid var(--color-border);
+      padding: 24px 0 16px;
+      position: sticky;
+      top: 56px;
+      z-index: 80;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .stepper-track-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .stepper-track {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    .stepper-track::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gray-200);
+      z-index: 1;
+    }
+    .stepper-track-progress {
+      position: absolute;
+      top: 18px;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--color-primary);
+      z-index: 2;
+      transition: width 0.35s ease;
+    }
+    .step-node {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      text-align: center;
+    }
+    .step-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--gray-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--color-muted);
+      transition: all 0.3s ease;
+    }
+    .step-circle .step-check-icon {
+      width: 16px;
+      height: 16px;
+      stroke-width: 3;
+      display: none;
+    }
+    .step-circle span svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.5;
+      display: block;
+    }
+    .step-label {
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-muted);
+      transition: color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    /* Step Node States */
+    .step-node.active .step-circle {
+      border-color: var(--color-primary);
+      background: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    }
+    .step-node.active .step-label {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+    .step-node.completed .step-circle {
+      border-color: var(--color-success);
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+    .step-node.completed .step-circle span {
+      display: none;
+    }
+    .step-node.completed .step-circle .step-check-icon {
+      display: block;
+    }
+    .step-node.completed .step-label {
+      color: var(--color-success);
+    }
+
+    /* ── Main Form Container ──────────────────────────── */
+    .form-container-section {
+      flex: 1;
+      padding: 40px 0 80px;
+    }
+    .form-wizard-card {
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card-lg);
+      box-shadow: var(--shadow-lg);
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .form-wizard-header {
+      background: linear-gradient(135deg, var(--color-topbar-bg) 0%, #1e3a8a 100%);
+      padding: 24px 32px;
+      color: #fff;
+      position: relative;
+    }
+    .form-wizard-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .form-wizard-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+    }
+    .form-wizard-body {
+      padding: 32px;
+    }
+    .form-wizard-footer {
+      padding: 20px 32px;
+      background: var(--gray-50);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-step-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .hidden {
+      display: none !important;
+    }
+
+    /* Section Subheadings inside steps */
+    .form-step-sub {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: 8px;
+      margin-bottom: 4px;
+    }
+    .form-step-sub svg {
+      color: var(--color-primary);
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Grid helpers */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .form-grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 1024px) {
+      .form-grid-4 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .form-grid-2, .form-grid-3, .form-grid-4 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    /* ── Step 1: Radio Card Selector ───────────────────── */
+    .radio-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .radio-card {
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+    .radio-card:hover {
+      border-color: var(--color-primary-border);
+      background: var(--color-primary-light);
+    }
+    .radio-card input[type="radio"] {
+      margin-top: 4px;
+      accent-color: var(--color-primary);
+      width: 16px;
+      height: 16px;
+    }
+    .radio-card-content {
+      flex: 1;
+    }
+    .radio-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 2px;
+    }
+    .radio-card-desc {
+      font-size: 12px;
+      color: var(--color-muted);
+    }
+    .radio-card.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      box-shadow: 0 0 0 1px var(--color-primary);
+    }
+
+    /* ── Schedule Card Selector (Step 1) ───────────────── */
+    .schedule-title-wrap {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .schedule-card {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #fff;
+    }
+    .schedule-card:hover {
+      border-color: var(--color-primary-border);
+      box-shadow: var(--shadow-sm);
+    }
+    .schedule-card.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      box-shadow: 0 0 0 1px var(--color-primary);
+    }
+    .schedule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed var(--color-border);
+      padding-bottom: 8px;
+    }
+    .train-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .train-name svg {
+      width: 14px;
+      height: 14px;
+      color: var(--color-primary);
+    }
+    .train-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--gray-200);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--gray-600);
+    }
+    .schedule-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .station-block {
+      flex: 1;
+    }
+    .station-time {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+    .station-name {
+      font-size: 12px;
+      color: var(--color-muted);
+      margin-top: 1px;
+    }
+    .duration-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      padding: 0 8px;
+    }
+    .duration-line {
+      width: 80px;
+      height: 2px;
+      background: var(--gray-300);
+      position: relative;
+    }
+    .duration-line::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid var(--gray-400);
+      border-right: 2px solid var(--gray-400);
+      transform: rotate(45deg);
+    }
+    .duration-value {
+      font-size: 11px;
+      color: var(--color-muted);
+      margin-top: 4px;
+    }
+    .quota-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--gray-100);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .schedule-card.selected .quota-info {
+      background: rgba(37, 99, 235, 0.08);
+    }
+    .quota-left {
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* ── Searchable Address Inputs (Step 2) ─────────────── */
+    .search-select-wrapper {
+      position: relative;
+    }
+    .search-suggestions-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1.5px solid var(--color-primary);
+      border-top: none;
+      border-radius: 0 0 var(--radius-btn) var(--radius-btn);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: var(--shadow-lg);
+      margin-top: -2px;
+    }
+    .suggestion-item {
+      padding: 10px 14px;
+      font-size: 13.5px;
+      cursor: pointer;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .suggestion-item:hover, .suggestion-item.highlighted {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    /* ── File Upload Drag-and-Drop Area ────────────────── */
+    .upload-zone-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      height: 100%;
+    }
+    .upload-zone {
+      border: 2px dashed var(--gray-300);
+      border-radius: var(--radius-card-lg);
+      padding: 22px 18px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--gray-50);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 155px;
+      flex: 1;
+    }
+    .upload-zone:hover {
+      border-color: var(--color-primary-border);
+      background: var(--color-primary-light);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.04);
+    }
+    .upload-zone.dragover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+    .upload-zone.success {
+      border-style: solid;
+      border-color: var(--color-success);
+      background: #F0FDF4;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.06);
+    }
+    .upload-icon-wrap {
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-muted);
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      border: 1px solid var(--color-border);
+    }
+    .upload-zone:hover .upload-icon-wrap {
+      color: var(--color-primary);
+      border-color: var(--color-primary-border);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .upload-zone.success .upload-icon-wrap {
+      color: var(--color-success);
+      background: var(--color-success-bg);
+      border-color: rgba(22, 163, 74, 0.2);
+    }
+    .upload-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    .upload-desc {
+      font-size: 11px;
+      color: var(--color-muted);
+      line-height: 1.3;
+    }
+    .upload-preview {
+      display: none;
+    }
+
+    /* Modern Two-State Upload layout */
+    .upload-default-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .upload-success-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .upload-zone.success .upload-default-state {
+      display: none;
+    }
+    .upload-zone:not(.success) .upload-success-state {
+      display: none;
+    }
+    .upload-remove-btn {
+      position: absolute;
+      top: -12px;
+      right: -8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #FEE2E2;
+      color: var(--color-danger);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10;
+      padding: 0;
+    }
+    .upload-remove-btn:hover {
+      background: var(--color-danger);
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: var(--shadow-sm);
+    }
+    .upload-remove-btn svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 3;
+    }
+    .upload-file-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--gray-900);
+      text-align: center;
+      margin-top: 4px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0 10px;
+    }
+    .upload-file-size {
+      font-size: 11px;
+      color: var(--color-muted);
+      margin-top: 2px;
+    }
+    .upload-success-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-success-bg);
+      color: var(--color-success);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      margin-top: 8px;
+      border: 1px solid rgba(22, 163, 74, 0.2);
+    }
+    .upload-success-badge svg {
+      width: 9px;
+      height: 9px;
+      stroke-width: 3;
+    }
+
+    /* STNK Badge Info */
+    .stnk-badge-info {
+      font-size: 11.5px;
+      color: var(--color-info);
+      background: var(--color-info-bg);
+      border: 1px solid #BAE6FD;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .stnk-badge-info svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── License Plate Custom Row (Step 3) ──────────────── */
+    .license-plate-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 100px;
+      gap: 10px;
+    }
+    .license-plate-row .form-select, .license-plate-row .form-input {
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: 1px;
+    }
+
+    /* ── Step 4: Passenger Container Card ───────────────── */
+    .passenger-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .passenger-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      background: var(--gray-50);
+      position: relative;
+    }
+    .passenger-card-header {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .passenger-card-header svg {
+      width: 15px;
+      height: 15px;
+    }
+    .passenger-card-header .p-badge {
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--color-primary-light);
+      border: 1px solid var(--color-primary-border);
+      color: var(--color-primary);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ── Step 5: Beautiful Summary Preview ──────────────── */
+    .preview-step-group {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .preview-step-header {
+      background: var(--gray-100);
+      padding: 12px 20px;
+      font-weight: 700;
+      font-size: 14.5px;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .preview-step-header .edit-trigger {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .preview-step-header .edit-trigger:hover {
+      text-decoration: underline;
+      color: var(--color-primary-hover);
+    }
+    .preview-step-header .edit-trigger svg {
+      width: 13px;
+      height: 13px;
+    }
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .preview-table tr {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .preview-table tr:last-child {
+      border-bottom: none;
+    }
+    .preview-table td {
+      padding: 12px 20px;
+      font-size: 13.5px;
+    }
+    .preview-label {
+      width: 240px;
+      font-weight: 600;
+      color: var(--color-muted);
+      background: var(--gray-50);
+    }
+    .preview-val {
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    @media (max-width: 640px) {
+      .preview-table td {
+        display: block;
+        width: 100%;
+      }
+      .preview-label {
+        padding-bottom: 4px;
+        background: none;
+      }
+      .preview-val {
+        padding-top: 0;
+      }
+    }
+    .preview-upload-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-success);
+      background: var(--color-success-bg);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #BBF7D0;
+    }
+    .preview-upload-item svg {
+      width: 13px;
+      height: 13px;
+      stroke-width: 2.5;
+    }
+
+    /* ── Consent Checkbox Area ────────────────────────── */
+    .consent-card {
+      background: var(--color-warning-bg);
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius-card);
+      padding: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .consent-card input {
+      margin-top: 4px;
+      accent-color: var(--color-warning);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .consent-text {
+      font-size: 13px;
+      color: #92400E;
+      line-height: 1.6;
+    }
+    .consent-text strong {
+      font-weight: 700;
+    }
+
+    /* ── Success Modal Popup ──────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: var(--radius-modal);
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: var(--shadow-xl);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: center;
+    }
+    .modal-overlay.is-open .modal-box {
+      transform: translateY(0);
+    }
+    .success-badge-animation {
+      width: 80px;
+      height: 80px;
+      background: var(--color-success-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: var(--color-success);
+      position: relative;
+    }
+    .success-badge-animation::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px dashed var(--color-success);
+      animation: spin 8s linear infinite;
+    }
+    .success-badge-animation svg {
+      width: 40px;
+      height: 40px;
+      stroke-width: 2.5;
+    }
+    .modal-main-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: 8px;
+    }
+    .modal-main-desc {
+      font-size: 14.5px;
+      color: var(--color-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .success-ticket-receipt {
+      border: 1px dashed var(--color-border);
+      background: var(--gray-50);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      margin-bottom: 28px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+    .receipt-lbl {
+      color: var(--color-muted);
+    }
+    .receipt-val {
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .receipt-val.mono {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--color-primary);
+    }
+    .modal-actions-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .modal-actions-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Alert Banner inside forms */
+    .step-error-banner {
+      background: var(--color-danger-bg);
+      border: 1.5px solid #FECACA;
+      border-radius: var(--radius-card);
+      padding: 12px 16px;
+      color: #991B1B;
+      font-size: 13.5px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .step-error-banner svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Spacing fixes */
+    .form-group.col-span-2 {
+      grid-column: span 2;
+    }
+    @media (max-width: 640px) {
+      .form-group.col-span-2 {
+        grid-column: span 1;
+      }
+    }
+
+    /* Animations */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" style="box-shadow: 0 2px 10px rgba(0,0,0,.1)">
+    <div class="container navbar-inner">
+      <a href="index.html" class="navbar-brand">
+        <img src="logo-kemenhub.png" alt="Logo Kemenhub" class="brand-logo-img">
+      </a>
+      
+      <div class="navbar-actions" style="margin-left: auto; display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
+          <span style="font-size: 13.5px; font-weight: 700; color: #fff;" id="navUserFullName">Peserta MOTIS</span>
+          <span style="font-size: 11px; color: rgba(255,255,255,.5);" id="navUserPhone">+62 812-xxxx</span>
+        </div>
+        <button id="logoutBtn" class="btn btn-sm btn-outline" style="border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.85)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Keluar
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- STEPPER PROGRESS HEADER -->
+  <section class="stepper-header-section">
+    <div class="stepper-track-wrapper">
+      <div class="stepper-track">
+        <div class="stepper-track-progress" id="stepperProgressBar"></div>
+
+        <div class="step-node active" data-step="1" id="stepNode1">
+          <div class="step-circle">
+            <span><i data-lucide="train"></i></span>
+            <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step-label">Kuota Perjalanan</span>
+        </div>
+
+        <div class="step-node" data-step="2" id="stepNode2">
+          <div class="step-circle">
+            <span><i data-lucide="user"></i></span>
+            <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step-label">Informasi Peserta</span>
+        </div>
+
+        <div class="step-node" data-step="3" id="stepNode3">
+          <div class="step-circle">
+            <span><i data-lucide="bike"></i></span>
+            <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step-label">Informasi Kendaraan</span>
+        </div>
+
+        <div class="step-node" data-step="4" id="stepNode4">
+          <div class="step-circle">
+            <span><i data-lucide="ticket"></i></span>
+            <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step-label">Informasi Tiket</span>
+        </div>
+
+        <div class="step-node" data-step="5" id="stepNode5">
+          <div class="step-circle">
+            <span><i data-lucide="clipboard-list"></i></span>
+            <svg class="step-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step-label">Preview Data</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM CONTAINER SECTION -->
+  <section class="form-container-section">
+    <div class="container">
+      
+      <div class="form-wizard-card">
+        
+        <!-- Header -->
+        <div class="form-wizard-header">
+          <h2 class="form-wizard-title" id="wizardDisplayTitle">Kuota Perjalanan</h2>
+          <p class="form-wizard-desc" id="wizardDisplayDesc">Pilih kota asal, tujuan, tanggal mudik dan kuota kereta api pengiriman motor gratis.</p>
+        </div>
+
+        <!-- Body Form -->
+        <div class="form-wizard-body">
+          
+          <!-- Alert error banner -->
+          <div class="step-error-banner hidden" id="stepErrorBanner">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="stepErrorMsg">Harap lengkapi semua kolom yang wajib diisi sebelum melanjutkan.</span>
+          </div>
+
+          <form id="wizardMainForm" novalidate>
+            
+            <!-- ======================================================= -->
+            <!-- STEP 1 PANEL: Kuota Perjalanan -->
+            <!-- ======================================================= -->
+            <div class="form-step-panel" id="stepPanel1">
+              
+              <div class="form-group">
+                <label class="form-label">Jenis Perjalanan <span class="required">*</span></label>
+                <div class="radio-card-grid">
+                  <label class="radio-card selected" id="optOnce">
+                    <input type="radio" name="jenisPerjalanan" value="Sekali Jalan" checked>
+                    <div class="radio-card-content">
+                      <div class="radio-card-title">Sekali Jalan</div>
+                      <div class="radio-card-desc">Pengiriman satu rute pergi mudik saja.</div>
+                    </div>
+                  </label>
+                  <label class="radio-card" id="optRound">
+                    <input type="radio" name="jenisPerjalanan" value="Pulang Pergi">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title">Pulang Pergi</div>
+                      <div class="radio-card-desc">Pengiriman motor pergi mudik & balik Lebaran.</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="asalSelect">Stasiun / Kota Asal <span class="required">*</span></label>
+                  <select class="form-select" id="asalSelect" required>
+                    <option value="" disabled selected>-- Pilih Asal --</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="tujuanSelect">Stasiun / Kota Tujuan <span class="required">*</span></label>
+                  <select class="form-select" id="tujuanSelect" required>
+                    <option value="" disabled selected>-- Pilih Tujuan --</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="tanggalMudik">Tanggal Mudik (Pergi) <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="tanggalMudik" min="2026-03-01" max="2026-04-30" required>
+                </div>
+                <div class="form-group" id="tanggalBalikGroup" style="display: none;">
+                  <label class="form-label" for="tanggalBalik">Tanggal Balik (Pulang) <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="tanggalBalik" min="2026-03-01" max="2026-04-30">
+                </div>
+              </div>
+
+              <!-- Button Check Kuota -->
+              <button type="button" class="btn btn-dark" id="btnCekKuota" style="width: 100%; height: 42px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Cek Ketersediaan Kuota Pengiriman
+              </button>
+
+              <!-- Hidden Kuota IDs -->
+              <input type="hidden" id="selectedKuotaId">
+              <input type="hidden" id="selectedKuotaBalikId">
+
+              <!-- Departure Schedule List -->
+              <div id="scheduleDepartureArea" style="display: none;">
+                <div class="schedule-title-wrap">
+                  <div class="form-step-sub" style="border:none;margin-bottom:0;padding-bottom:0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/></svg>
+                    Pilih Kuota KA Keberangkatan (Mudik)
+                  </div>
+                  <span class="badge badge-info" id="departureCountBadge">0 Rute Ditemukan</span>
+                </div>
+                <div class="schedule-grid" id="departureScheduleGrid">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- Return Schedule List -->
+              <div id="scheduleReturnArea" style="display: none;">
+                <div class="schedule-title-wrap">
+                  <div class="form-step-sub" style="border:none;margin-bottom:0;padding-bottom:0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/></svg>
+                    Pilih Kuota KA Pengembalian (Balik)
+                  </div>
+                  <span class="badge badge-info" id="returnCountBadge">0 Rute Ditemukan</span>
+                </div>
+                <div class="schedule-grid" id="returnScheduleGrid">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ======================================================= -->
+            <!-- STEP 2 PANEL: Informasi Peserta -->
+            <!-- ======================================================= -->
+            <div class="form-step-panel hidden" id="stepPanel2">
+              
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profil Akun & Demografis
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label" for="namaLengkap">Nama Lengkap</label>
+                  <input type="text" class="form-input" id="namaLengkap" disabled>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="noHandphone">No. Handphone (WA)</label>
+                  <input type="text" class="form-input" id="noHandphone" disabled>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="emailPeserta">Alamat Email</label>
+                  <input type="email" class="form-input" id="emailPeserta" disabled>
+                </div>
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label" for="jenisKelamin">Jenis Kelamin <span class="required">*</span></label>
+                  <select class="form-select" id="jenisKelamin" required>
+                    <option value="" disabled selected>-- Pilih --</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="tanggalLahir">Tanggal Lahir <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="tanggalLahir" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profesi">Pekerjaan / Profesi <span class="required">*</span></label>
+                  <select class="form-select" id="profesi" required>
+                    <option value="" disabled selected>-- Pilih --</option>
+                    <option value="Karyawan Swasta">Karyawan Swasta</option>
+                    <option value="Pegawai Negeri (PNS)">Pegawai Negeri (PNS)</option>
+                    <option value="TNI / POLRI">TNI / POLRI</option>
+                    <option value="Wiraswasta">Wiraswasta</option>
+                    <option value="Petani / Nelayan">Petani / Nelayan</option>
+                    <option value="Mahasiswa / Pelajar">Mahasiswa / Pelajar</option>
+                    <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="nik">Nomor Induk Kependudukan (NIK KTP) <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="nik" maxlength="16" placeholder="16 Digit Angka NIK" pattern="[0-9]{16}" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="nomorKK">Nomor Kartu Keluarga (KK) <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="nomorKK" maxlength="16" placeholder="16 Digit Angka KK" pattern="[0-9]{16}" required>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="nomorSIMC">Nomor SIM C <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="nomorSIMC" placeholder="Contoh: 0912-3456-7890" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="masaBerlakuSIMC">Masa Berlaku SIM C <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="masaBerlakuSIMC" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pendidikan">Pendidikan Terakhir <span class="required">*</span></label>
+                <select class="form-select" id="pendidikan" required>
+                  <option value="" disabled selected>-- Pilih Pendidikan --</option>
+                  <option value="SD">SD Sederajat</option>
+                  <option value="SMP">SMP Sederajat</option>
+                  <option value="SMA / SMK">SMA / SMK Sederajat</option>
+                  <option value="Diploma (D1/D2/D3)">Diploma (D1/D2/D3)</option>
+                  <option value="Sarjana (D4/S1)">Sarjana (D4/S1)</option>
+                  <option value="Pascasarjana (S2/S3)">Pascasarjana (S2/S3)</option>
+                </select>
+              </div>
+
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Alamat Tinggal Sesuai KTP
+              </div>
+
+              <div class="form-grid-2">
+                <!-- Provinsi Dropdown -->
+                <div class="form-group">
+                  <label class="form-label" for="provinsiSelect">Provinsi <span class="required">*</span></label>
+                  <select class="form-select" id="provinsiSelect" required>
+                    <option value="" disabled selected>-- Pilih Provinsi --</option>
+                  </select>
+                  <input type="hidden" id="provinsiValue">
+                </div>
+
+                <!-- Kabupaten / Kota Dropdown -->
+                <div class="form-group">
+                  <label class="form-label" for="kabupatenSelect">Kabupaten / Kota <span class="required">*</span></label>
+                  <select class="form-select" id="kabupatenSelect" disabled required>
+                    <option value="" disabled selected>-- Pilih Kabupaten/Kota --</option>
+                  </select>
+                  <input type="hidden" id="kabupatenValue">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <!-- Kecamatan Dropdown -->
+                <div class="form-group">
+                  <label class="form-label" for="kecamatanSelect">Kecamatan <span class="required">*</span></label>
+                  <select class="form-select" id="kecamatanSelect" disabled required>
+                    <option value="" disabled selected>-- Pilih Kecamatan --</option>
+                  </select>
+                  <input type="hidden" id="kecamatanValue">
+                </div>
+
+                <!-- Kelurahan Dropdown -->
+                <div class="form-group">
+                  <label class="form-label" for="kelurahanSelect">Kelurahan <span class="required">*</span></label>
+                  <select class="form-select" id="kelurahanSelect" disabled required>
+                    <option value="" disabled selected>-- Pilih Kelurahan --</option>
+                  </select>
+                  <input type="hidden" id="kelurahanValue">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="alamatLengkap">Alamat Jalan / RT / RW / No. Rumah <span class="required">*</span></label>
+                <textarea class="form-textarea" id="alamatLengkap" placeholder="Masukkan nama jalan lengkap, blok, nomor rumah, RT/RW secara mendetail" required></textarea>
+              </div>
+
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Unggah Dokumen Verifikasi (Maksimal 2 MB per file)
+              </div>
+
+              <div class="form-grid-2">
+                <!-- KTP Upload -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">Kartu Tanda Penduduk (KTP) <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneKTP">
+                    <input type="file" id="uploadKTP" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      </div>
+                      <div class="upload-title">Pilih / Seret KTP</div>
+                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus KTP">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewKTP"></div>
+                  </div>
+                </div>
+
+                <!-- KK Upload -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">Kartu Keluarga (KK) <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneKK">
+                    <input type="file" id="uploadKK" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      </div>
+                      <div class="upload-title">Pilih / Seret KK</div>
+                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus KK">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewKK"></div>
+                  </div>
+                </div>
+
+                <!-- SIM Upload -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">SIM C Aktif <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneSIM">
+                    <input type="file" id="uploadSIM" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      </div>
+                      <div class="upload-title">Pilih / Seret SIM C</div>
+                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus SIM C">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewSIM"></div>
+                  </div>
+                </div>
+
+                <!-- STNK Upload -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">STNK Motor <span style="font-weight: 500; font-size: 11.5px; color: var(--color-muted);">(Opsional)</span></label>
+                  <div class="upload-zone" id="zoneSTNK">
+                    <input type="file" id="uploadSTNK" accept=".jpg,.jpeg,.png,.pdf" class="hidden">
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      </div>
+                      <div class="upload-title">Pilih / Seret STNK</div>
+                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus STNK">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewSTNK"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STNK Badge Info (Di bawah Grid) -->
+              <div class="stnk-badge-info" style="margin-top: 12px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>Mengunggah STNK sekarang akan mempermudah dan mempercepat proses verifikasi di posko. Jika belum diunggah, Anda **wajib membawa STNK asli** saat verifikasi langsung di stasiun.</span>
+              </div>
+
+            </div>
+
+            <!-- ======================================================= -->
+            <!-- STEP 3 PANEL: Informasi Kendaraan -->
+            <!-- ======================================================= -->
+            <div class="form-step-panel hidden" id="stepPanel3">
+              
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                Spesifikasi Sepeda Motor
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-group col-span-2">
+                  <label class="form-label">Nomor Polisi (Plat Motor) <span class="required">*</span></label>
+                  <div class="license-plate-row">
+                    <!-- Kode Wilayah -->
+                    <select class="form-select" id="platWilayah" required>
+                      <option value="" disabled selected>-</option>
+                      <option value="B">B (Jakarta/Depok/Bekasi)</option>
+                      <option value="D">D (Bandung/Cimahi)</option>
+                      <option value="F">F (Bogor/Cianjur/Sukabumi)</option>
+                      <option value="E">E (Cirebon/Majalengka)</option>
+                      <option value="H">H (Semarang/Salatiga)</option>
+                      <option value="K">K (Pati/Kudus/Jepara)</option>
+                      <option value="AB">AB (Yogyakarta/Sleman)</option>
+                      <option value="AD">AD (Surakarta/Solo)</option>
+                      <option value="L">L (Surabaya)</option>
+                      <option value="W">W (Sidoarjo/Gresik)</option>
+                      <option value="N">N (Malang/Pasuruan)</option>
+                      <option value="Z">Z (Garut/Tasikmalaya)</option>
+                    </select>
+                    <!-- Angka Plat -->
+                    <input type="text" class="form-input" id="platNomor" placeholder="1234" maxlength="4" pattern="[0-9]{1,4}" required>
+                    <!-- Huruf Belakang -->
+                    <input type="text" class="form-input" id="platHuruf" placeholder="ABC" maxlength="3" pattern="[A-Za-z]{1,3}" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="merekMotor">Merek Motor <span class="required">*</span></label>
+                  <select class="form-select" id="merekMotor" required>
+                    <option value="" disabled selected>-- Pilih Merek --</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Yamaha">Yamaha</option>
+                    <option value="Suzuki">Suzuki</option>
+                    <option value="Kawasaki">Kawasaki</option>
+                    <option value="Viar">Viar</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="kapasitasMesin">Kapasitas Mesin (CC) <span class="required">*</span></label>
+                <select class="form-select" id="kapasitasMesin" required>
+                  <option value="" disabled selected>-- Pilih Kapasitas Mesin --</option>
+                  <option value="Maksimal 110 cc">Maksimal 110 cc</option>
+                  <option value="115 cc - 125 cc">115 cc - 125 cc</option>
+                  <option value="135 cc - 150 cc">135 cc - 150 cc</option>
+                  <option value="155 cc - 200 cc">155 cc - 200 cc</option>
+                  <option value="Di atas 200 cc" disabled>Di atas 200 cc (TIDAK MEMENUHI SYARAT MOTIS)</option>
+                </select>
+              </div>
+
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Unggah Foto Kondisi Fisik Motor (Maksimal 2 MB per file)
+              </div>
+
+              <div class="form-grid-2" style="gap: 16px;">
+                <!-- Foto Depan -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">Tampak Depan Motor <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneFotoDepan">
+                    <input type="file" id="fotoDepan" accept="image/*" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-title">Unggah Foto Depan</div>
+                      <div class="upload-desc">Harus terlihat plat nomor depan.</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus Foto Depan">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewFotoDepan"></div>
+                  </div>
+                </div>
+
+                <!-- Foto Belakang -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">Tampak Belakang Motor <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneFotoBelakang">
+                    <input type="file" id="fotoBelakang" accept="image/*" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-title">Unggah Foto Belakang</div>
+                      <div class="upload-desc">Harus terlihat plat nomor belakang.</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus Foto Belakang">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewFotoBelakang"></div>
+                  </div>
+                </div>
+
+                <!-- Foto Kanan -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">Tampak Sisi Kanan <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneFotoKanan">
+                    <input type="file" id="fotoKanan" accept="image/*" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-title">Unggah Sisi Kanan</div>
+                      <div class="upload-desc">Memperlihatkan badan motor sisi kanan.</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus Foto Kanan">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewFotoKanan"></div>
+                  </div>
+                </div>
+
+                <!-- Foto Kiri -->
+                <div class="upload-zone-wrapper">
+                  <label class="form-label">Tampak Sisi Kiri <span class="required">*</span></label>
+                  <div class="upload-zone" id="zoneFotoKiri">
+                    <input type="file" id="fotoKiri" accept="image/*" class="hidden" required>
+                    <!-- Default State -->
+                    <div class="upload-default-state">
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-title">Unggah Sisi Kiri</div>
+                      <div class="upload-desc">Memperlihatkan badan motor sisi kiri.</div>
+                    </div>
+                    <!-- Success State -->
+                    <div class="upload-success-state">
+                      <button type="button" class="upload-remove-btn" title="Hapus Foto Kiri">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="upload-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <div class="upload-file-name">-</div>
+                      <div class="upload-file-size">-</div>
+                      <div class="upload-success-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Berhasil
+                      </div>
+                    </div>
+                    <div class="upload-preview hidden" id="previewFotoKiri"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                Lokasi & Waktu Logistik Serah-Terima Motor
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="lokasiPenyerahan">Stasiun Penyerahan Motor (Asal) <span class="required">*</span></label>
+                  <select class="form-select" id="lokasiPenyerahan" required>
+                    <option value="" disabled selected>-- Pilih Stasiun --</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="lokasiPengambilan">Stasiun Pengambilan Motor (Tujuan) <span class="required">*</span></label>
+                  <select class="form-select" id="lokasiPengambilan" required>
+                    <option value="" disabled selected>-- Pilih Stasiun --</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="tanggalPenyerahan">Rencana Tanggal Serah Motor <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="tanggalPenyerahan" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="waktuPenyerahan">Estimasi Jam Penyerahan <span class="required">*</span></label>
+                  <select class="form-select" id="waktuPenyerahan" required>
+                    <option value="" disabled selected>-- Pilih Jam --</option>
+                    <option value="08:00 - 10:00 WIB">Pagi (08:00 - 10:00 WIB)</option>
+                    <option value="10:00 - 12:00 WIB">Siang (10:00 - 12:00 WIB)</option>
+                    <option value="13:00 - 15:00 WIB">Sore (13:00 - 15:00 WIB)</option>
+                    <option value="15:00 - 17:00 WIB">Sore Akhir (15:00 - 17:00 WIB)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="tanggalVerifikasi">Rencana Tanggal Verifikasi Dokumen <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="tanggalVerifikasi" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="waktuVerifikasi">Estimasi Jam Kedatangan Verifikasi <span class="required">*</span></label>
+                  <select class="form-select" id="waktuVerifikasi" required>
+                    <option value="" disabled selected>-- Pilih Jam --</option>
+                    <option value="08:00 - 11:00 WIB">Sesi 1 (08:00 - 11:00 WIB)</option>
+                    <option value="11:00 - 14:00 WIB">Sesi 2 (11:00 - 14:00 WIB)</option>
+                    <option value="14:00 - 17:00 WIB">Sesi 3 (14:00 - 17:00 WIB)</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ======================================================= -->
+            <!-- STEP 4 PANEL: Informasi Tiket -->
+            <!-- ======================================================= -->
+            <div class="form-step-panel hidden" id="stepPanel4">
+              
+              <div class="form-step-sub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="18" y2="14"/></svg>
+                Status Kepemilikan Tiket Kereta Api Mudik
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Apakah Anda sudah membeli tiket penumpang Kereta Api? <span class="required">*</span></label>
+                <div class="radio-card-grid">
+                  <label class="radio-card selected" id="optTiketSudah">
+                    <input type="radio" name="sudahMudik" value="Sudah" checked>
+                    <div class="radio-card-content">
+                      <div class="radio-card-title">Sudah Punya Tiket</div>
+                      <div class="radio-card-desc">Saya sudah memesan tiket kereta penumpang secara mandiri.</div>
+                    </div>
+                  </label>
+                  <label class="radio-card" id="optTiketBelum">
+                    <input type="radio" name="sudahMudik" value="Belum">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title">Belum Punya Tiket</div>
+                      <div class="radio-card-desc">Saya ingin memesan kuota tiket kereta mudik sekalian di form ini.</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- SUB FORM: JIKA SUDAH PUNYA TIKET -->
+              <div id="subFormTiketSudah" class="form-group">
+                <label class="form-label">Unggah Bukti / Dokumen Tiket KA Anda <span class="required">*</span></label>
+                <div class="upload-zone" id="zoneTiketMudik">
+                  <input type="file" id="uploadTiket" accept=".jpg,.jpeg,.png,.pdf" class="hidden">
+                  <!-- Default State -->
+                  <div class="upload-default-state">
+                    <div class="upload-icon-wrap">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <div class="upload-title">Pilih / Seret File Tiket</div>
+                    <div class="upload-desc">E-Ticket KAI Access, PDF Tiket, atau Foto Tiket Fisik (Maks 2MB)</div>
+                  </div>
+                  <!-- Success State -->
+                  <div class="upload-success-state">
+                    <button type="button" class="upload-remove-btn" title="Hapus Tiket">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                    <div class="upload-icon-wrap">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div class="upload-file-name">-</div>
+                    <div class="upload-file-size">-</div>
+                    <div class="upload-success-badge">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      Berhasil
+                    </div>
+                  </div>
+                  <div class="upload-preview hidden" id="previewTiket"></div>
+                </div>
+              </div>
+
+              <!-- SUB FORM: JIKA BELUM PUNYA TIKET -->
+              <div id="subFormTiketBelum" class="form-step-panel hidden" style="border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 20px; background: var(--gray-50)">
+                <div class="form-step-sub" style="border:none;margin-bottom:0">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                  Pengajuan Pembelian Tiket KA Terintegrasi
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Tipe Tiket Perjalanan <span class="required">*</span></label>
+                  <div style="display: flex; gap: 20px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13.5px;">
+                      <input type="radio" name="jenisPerjalananTiket" value="Sekali Jalan" checked style="accent-color:var(--color-primary)"> Sekali Jalan
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13.5px;">
+                      <input type="radio" name="jenisPerjalananTiket" value="Pulang Pergi" style="accent-color:var(--color-primary)"> Pulang Pergi
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label" for="tiketAsalSearch">Stasiun Asal Penumpang <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="tiketAsalSearch" placeholder="Ketik nama stasiun asal..." required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="tiketTujuanSearch">Stasiun Tujuan Penumpang <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="tiketTujuanSearch" placeholder="Ketik nama stasiun tujuan..." required>
+                  </div>
+                </div>
+
+                <div class="form-grid-3">
+                  <div class="form-group">
+                    <label class="form-label" for="jumlahPenumpang">Jumlah Penumpang (Maks 2) <span class="required">*</span></label>
+                    <input type="number" class="form-input" id="jumlahPenumpang" value="1" min="1" max="2" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="tanggalPergi">Tanggal Keberangkatan <span class="required">*</span></label>
+                    <input type="date" class="form-input" id="tanggalPergi" required>
+                  </div>
+                  <div class="form-group" id="tanggalBalikTiketGroup" style="display: none;">
+                    <label class="form-label" for="tanggalBalikTiket">Tanggal Kepulangan <span class="required">*</span></label>
+                    <input type="date" class="form-input" id="tanggalBalikTiket">
+                  </div>
+                </div>
+
+                <!-- Dynamic Passengers Area -->
+                <div class="form-group" style="margin-top: 12px;">
+                  <label class="form-label">Data Penumpang Kereta Api</label>
+                  <div class="passenger-list" id="passengerInputsGrid">
+                    <!-- Dynamic rendering of passenger inputs here -->
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- ======================================================= -->
+            <!-- STEP 5 PANEL: Preview Data -->
+            <!-- ======================================================= -->
+            <div class="form-step-panel hidden" id="stepPanel5">
+              
+              <div class="form-step-sub" style="border:none; margin-bottom:-10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Ringkasan Pendaftaran MOTIS 2026
+              </div>
+
+              <!-- Preview 1: Rute & Kuota -->
+              <div class="preview-step-group">
+                <div class="preview-step-header">
+                  <span>1. Detail Rute & Kuota Perjalanan</span>
+                  <div class="edit-trigger" data-target-step="1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"/></svg>
+                    Ubah
+                  </div>
+                </div>
+                <table class="preview-table">
+                  <tr>
+                    <td class="preview-label">Jenis Perjalanan</td>
+                    <td class="preview-val" id="prevJenisPerjalanan">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Rute Pengiriman</td>
+                    <td class="preview-val" id="prevRutePengiriman">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Jadwal Mudik (Pergi)</td>
+                    <td class="preview-val" id="prevJadwalPergi">-</td>
+                  </tr>
+                  <tr id="prevJadwalBalikRow" style="display: none;">
+                    <td class="preview-label">Jadwal Balik (Pulang)</td>
+                    <td class="preview-val" id="prevJadwalBalik">-</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Preview 2: Data Diri Peserta -->
+              <div class="preview-step-group">
+                <div class="preview-step-header">
+                  <span>2. Informasi Data Diri Peserta</span>
+                  <div class="edit-trigger" data-target-step="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"/></svg>
+                    Ubah
+                  </div>
+                </div>
+                <table class="preview-table">
+                  <tr>
+                    <td class="preview-label">Nama Lengkap & NIK</td>
+                    <td class="preview-val" id="prevNamaNIK">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Kontak (HP & Email)</td>
+                    <td class="preview-val" id="prevKontak">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">No. KK & SIM C</td>
+                    <td class="preview-val" id="prevKKSim">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Alamat Lengkap Tinggal</td>
+                    <td class="preview-val" id="prevAlamat">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Dokumen Unggahan</td>
+                    <td class="preview-val" id="prevDokumenFiles">-</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Preview 3: Kondisi & Logistik Motor -->
+              <div class="preview-step-group">
+                <div class="preview-step-header">
+                  <span>3. Spesifikasi & Logistik Motor</span>
+                  <div class="edit-trigger" data-target-step="3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"/></svg>
+                    Ubah
+                  </div>
+                </div>
+                <table class="preview-table">
+                  <tr>
+                    <td class="preview-label">Nomor Polisi (Plat)</td>
+                    <td class="preview-val" id="prevPlatMotor">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Merek & Kapasitas Mesin</td>
+                    <td class="preview-val" id="prevMerekCC">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Lokasi Logistik (Serah/Ambil)</td>
+                    <td class="preview-val" id="prevLokasiLogistik">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Jadwal Drop-Off & Verifikasi</td>
+                    <td class="preview-val" id="prevJadwalLogistik">-</td>
+                  </tr>
+                  <tr>
+                    <td class="preview-label">Foto Kondisi Fisik</td>
+                    <td class="preview-val" id="prevFotoMotor">-</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Preview 4: Status Tiket KA -->
+              <div class="preview-step-group">
+                <div class="preview-step-header">
+                  <span>4. Informasi Penumpang & Tiket Mudik</span>
+                  <div class="edit-trigger" data-target-step="4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"/></svg>
+                    Ubah
+                  </div>
+                </div>
+                <table class="preview-table">
+                  <tr>
+                    <td class="preview-label">Kepemilikan Tiket KA</td>
+                    <td class="preview-val" id="prevKepemilikanTiket">-</td>
+                  </tr>
+                  <tr id="prevUnggahTiketRow">
+                    <td class="preview-label">Lampiran Bukti Tiket</td>
+                    <td class="preview-val" id="prevUnggahTiketVal">-</td>
+                  </tr>
+                  <tr id="prevIntegrasiTiketRow" style="display: none;">
+                    <td class="preview-label">Rencana Pengajuan Tiket</td>
+                    <td class="preview-val" id="prevIntegrasiTiketVal">-</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Consent check -->
+              <div class="consent-card">
+                <input type="checkbox" id="consentCheck">
+                <div class="consent-text">
+                  Dengan mencentang kotak ini, saya menyatakan bahwa **seluruh data yang saya isi adalah benar dan sah**. Saya memahami bahwa segala bentuk pemalsuan dokumen atau ketidaksesuaian data pada saat pemeriksaan fisik di posko dapat mengakibatkan **pembatalan keikutsertaan program MOTIS secara sepihak** tanpa adanya kompensasi.
+                </div>
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+        <!-- Footer navigasi tombol -->
+        <div class="form-wizard-footer">
+          <button type="button" class="btn btn-secondary" id="btnPrev" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Sebelumnya
+          </button>
+          
+          <button type="button" class="btn btn-primary" id="btnNext" style="margin-left: auto;">
+            <span>Selanjutnya</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SUCCESS SUBMISSION MODAL -->
+  <div class="modal-overlay" id="successModalPopup">
+    <div class="modal-box">
+      <div class="success-badge-animation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 class="modal-main-title">Pendaftaran Berhasil Dikirim!</h3>
+      <p class="modal-main-desc">
+        Formulir perjalanan MOTIS 2026 Anda telah kami terima dan terdaftar di dalam database kementerian perhubungan.
+      </p>
+
+      <div class="success-ticket-receipt">
+        <div class="receipt-row">
+          <span class="receipt-lbl">Nomor Registrasi</span>
+          <span class="receipt-val mono" id="receiptRegNumber">MOTIS-2026-898231</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-lbl">Nama Pendaftar</span>
+          <span class="receipt-val" id="receiptName">Budiman Santoso</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-lbl">Plat Kendaraan</span>
+          <span class="receipt-val" id="receiptPlat">B 4591 SC</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-lbl">Status Verifikasi</span>
+          <span class="receipt-val" style="color:var(--color-warning)">Menunggu Posko</span>
+        </div>
+      </div>
+
+      <div class="modal-actions-wrap">
+        <button type="button" class="btn btn-secondary" onclick="window.print()" style="height: 44px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Cetak Bukti PDF
+        </button>
+        <a href="index.html" class="btn btn-primary" style="height: 44px; display:inline-flex;">
+          Kembali ke Beranda
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" style="margin-top: auto;">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:0; border:none;">
+        <span class="footer-copy">© 2026 Direktorat Jenderal Perkeretaapian, Kemenhub RI. Hak cipta dilindungi undang-undang.</span>
+        <div class="footer-gov">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Situs Resmi Pemerintah Indonesia
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // 1. AUTH GUARD & SESSION LOAD
+    // =========================================================================
+    // Check if '?dev=true' is set to enable Developer Mode for testing/inspections
+    const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
+
+    let currentUser = null;
+    function checkAuth() {
+      if (isDevMode && !localStorage.getItem('motis_user')) {
+        const mockUser = { identity: "developer@dephub.go.id", loginAt: new Date().toISOString() };
+        localStorage.setItem('motis_user', JSON.stringify(mockUser));
+      }
+
+      const userStr = localStorage.getItem('motis_user');
+      if (!userStr) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = JSON.parse(userStr);
+      
+      // Populate account info
+      document.getElementById('navUserFullName').textContent = currentUser.identity.includes('@') 
+        ? currentUser.identity.split('@')[0] 
+        : currentUser.identity;
+      document.getElementById('navUserPhone').textContent = currentUser.identity.includes('@') 
+        ? 'Akun Email'
+        : currentUser.identity;
+
+      // Populate Step 2 Profile
+      document.getElementById('namaLengkap').value = currentUser.identity.includes('@') 
+        ? currentUser.identity.split('@')[0].toUpperCase() 
+        : "PESERTA MOTIS";
+      document.getElementById('noHandphone').value = currentUser.identity.includes('@') 
+        ? "+62 812-3456-7890" 
+        : currentUser.identity;
+      document.getElementById('emailPeserta').value = currentUser.identity.includes('@') 
+        ? currentUser.identity 
+        : "peserta.motis@kai.id";
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('motis_user');
+      window.location.href = 'login.html';
+    });
+
+    checkAuth();
+
+    // =========================================================================
+    // 2. STATE MANAGEMENT & DATA MASTER
+    // =========================================================================
+    const formState = {
+      // Step 1
+      jenisPerjalanan: 'Sekali Jalan',
+      asalSelect: '',
+      tujuanSelect: '',
+      tanggalMudik: '',
+      tanggalBalik: '',
+      selectedKuotaId: '',
+      selectedKuotaBalikId: '',
+      
+      // Step 2
+      jenisKelamin: '',
+      tanggalLahir: '',
+      profesi: '',
+      nik: '',
+      nomorKK: '',
+      nomorSIMC: '',
+      masaBerlakuSIMC: '',
+      pendidikan: '',
+      provinsiValue: '',
+      kabupatenValue: '',
+      kecamatanValue: '',
+      kelurahanValue: '',
+      alamatLengkap: '',
+      files: {
+        uploadKTP: null,
+        uploadKK: null,
+        uploadSIM: null,
+        uploadSTNK: null
+      },
+
+      // Step 3
+      platWilayah: '',
+      platNomor: '',
+      platHuruf: '',
+      merekMotor: '',
+      kapasitasMesin: '',
+      fotoDepan: null,
+      fotoBelakang: null,
+      fotoKanan: null,
+      fotoKiri: null,
+      lokasiPenyerahan: '',
+      lokasiPengambilan: '',
+      tanggalPenyerahan: '',
+      waktuPenyerahan: '',
+      tanggalVerifikasi: '',
+      waktuVerifikasi: '',
+
+      // Step 4
+      sudahMudik: 'Sudah',
+      uploadTiket: null,
+      jenisPerjalananTiket: 'Sekali Jalan',
+      tiketAsalSearch: '',
+      tiketTujuanSearch: '',
+      jumlahPenumpang: 1,
+      tanggalPergi: '',
+      tanggalBalikTiket: '',
+      passengers: [
+        { nama: '', nik: '' }
+      ]
+    };
+
+    // Predefined Master List of Cities/Stations
+    const MASTER_STATIONS = [
+      { id: 'JAKARTA', label: 'Jakarta (Stasiun Gudang / Senen)' },
+      { id: 'BANDUNG', label: 'Bandung (Stasiun Bandung / Kiaracondong)' },
+      { id: 'CIREBON', label: 'Cirebon (Stasiun Prujakan)' },
+      { id: 'PURWOKERTO', label: 'Purwokerto (Stasiun Purwokerto)' },
+      { id: 'SEMARANG', label: 'Semarang (Stasiun Tawang)' },
+      { id: 'SOLO', label: 'Surakarta / Solo (Stasiun Purwosari)' },
+      { id: 'YOGYAKARTA', label: 'Yogyakarta (Stasiun Lempuyangan)' },
+      { id: 'MADIUN', label: 'Madiun (Stasiun Madiun)' },
+      { id: 'SURABAYA', label: 'Surabaya (Stasiun Pasar Turi)' },
+      { id: 'MALANG', label: 'Malang (Stasiun Malang)' }
+    ];
+
+    // Mock Address Hierarchical Data
+    const REGION_DB = {
+      'DKI JAKARTA': {
+        'KOTA JAKARTA SELATAN': {
+          'KEBAYORAN BARU': ['SELOONG', 'GUNUNG', 'KRAMAT PELA', 'GANDARIA UTARA', 'MELAWAI'],
+          'CILANDAK': ['CILANDAK BARAT', 'CIPETE SELATAN', 'GANDARIA SELATAN', 'PONDOK LABU']
+        },
+        'KOTA JAKARTA PUSAT': {
+          'GAMBIR': ['GAMBIR', 'CIDENG', 'PETOJO UTARA', 'PETOJO SELATAN', 'DURI PULO'],
+          'SENEN': ['SENEN', 'KWITANG', 'KENARI', 'PASEBAN', 'KRAMAT']
+        }
+      },
+      'JAWA BARAT': {
+        'KOTA BANDUNG': {
+          'COBLONG': ['DAGO', 'CIPAGANTI', 'LEBAK GEDE', 'SADANG SERANG'],
+          'LENGKONG': ['BURANGRANG', 'CIJAGRA', 'TURANGGA', 'MALABAR']
+        },
+        'KABUPATEN BOGOR': {
+          'CIBINONG': ['CIBINONG', 'PAKANSARI', 'HARAPAN JAYA', 'PONDOK RAJEG'],
+          'CITEUREUP': ['CITEUREUP', 'PUSPASARI', 'KARANG ASEM TIMUR']
+        }
+      },
+      'JAWA TENGAH': {
+        'KOTA SEMARANG': {
+          'SEMARANG TENGAH': ['PENDRIKAN KIDUL', 'SEKAYU', 'MIROTO', 'KAUMAN'],
+          'PEDURUNGAN': ['PEDURUNGAN KIDUL', 'TOLOGOSARI KULON', 'PLAMONGAN SARI']
+        }
+      },
+      'JAWA TIMUR': {
+        'KOTA SURABAYA': {
+          'GENTENG': ['GENTENG', 'KETABANG', 'EMBONG KALIASIN', 'KAPASARI'],
+          'WONOKROMO': ['WONOKROMO', 'DARMO', 'SAWAHGEDE', 'JAGIR']
+        }
+      }
+    };
+
+    // Prepopulate dropdowns
+    function populateDropdowns() {
+      const asal = document.getElementById('asalSelect');
+      const tujuan = document.getElementById('tujuanSelect');
+      const serah = document.getElementById('lokasiPenyerahan');
+      const ambil = document.getElementById('lokasiPengambilan');
+
+      MASTER_STATIONS.forEach(st => {
+        asal.add(new Option(st.label, st.id));
+        tujuan.add(new Option(st.label, st.id));
+        serah.add(new Option(st.label, st.id));
+        ambil.add(new Option(st.label, st.id));
+      });
+    }
+    populateDropdowns();
+
+    // =========================================================================
+    // 3. STEPPER MECHANICS (NAVIGATION & VALIDATION)
+    // =========================================================================
+    let currentStep = 1;
+    const TOTAL_STEPS = 5;
+
+    const stepTitles = [
+      "Kuota Perjalanan",
+      "Informasi Peserta",
+      "Informasi Kendaraan",
+      "Informasi Tiket",
+      "Preview Data"
+    ];
+    
+    const stepDescs = [
+      "Pilih kota asal, tujuan, tanggal mudik dan kuota kereta api pengiriman motor gratis.",
+      "Lengkapi data identitas pendaftar, wilayah tinggal, beserta dokumen persyaratan resmi.",
+      "Masukkan detail nopol kendaraan, kapasitas mesin, stasiun logistik, serta unggah kondisi motor.",
+      "Sinkronisasikan tiket mudik Anda yang sudah ada atau ajukan tiket mudik bersamaan di sini.",
+      "Ulas kembali data pendaftaran Anda sebelum dikirim ke sistem verifikator kementerian."
+    ];
+
+    function navigateToStep(step) {
+      if (step < 1 || step > TOTAL_STEPS) return;
+
+      // Hide error banner
+      document.getElementById('stepErrorBanner').classList.add('hidden');
+
+      // Unrender active step panel
+      document.getElementById(`stepPanel${currentStep}`).classList.add('hidden');
+      document.getElementById(`stepNode${currentStep}`).classList.remove('active');
+
+      // Update current step
+      currentStep = step;
+
+      // Render new step panel
+      document.getElementById(`stepPanel${currentStep}`).classList.remove('hidden');
+      document.getElementById(`stepNode${currentStep}`).classList.add('active');
+
+      // Update Stepper Tracks and Nodes classes
+      for (let i = 1; i <= TOTAL_STEPS; i++) {
+        const node = document.getElementById(`stepNode${i}`);
+        if (i < currentStep) {
+          node.classList.add('completed');
+          node.classList.remove('active');
+        } else if (i === currentStep) {
+          node.classList.remove('completed');
+          node.classList.add('active');
+        } else {
+          node.classList.remove('completed', 'active');
+        }
+      }
+
+      // Update Progress Bar Line Width
+      const progressWidth = ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100;
+      document.getElementById('stepperProgressBar').style.width = `${progressWidth}%`;
+
+      // Update Header Text
+      document.getElementById('wizardDisplayTitle').textContent = stepTitles[currentStep - 1];
+      document.getElementById('wizardDisplayDesc').textContent = stepDescs[currentStep - 1];
+
+      // Handle buttons
+      document.getElementById('btnPrev').style.display = currentStep === 1 ? 'none' : 'inline-flex';
+      
+      const btnNext = document.getElementById('btnNext');
+      if (currentStep === TOTAL_STEPS) {
+        btnNext.querySelector('span').textContent = 'Kirim Pendaftaran';
+        btnNext.className = 'btn btn-success';
+        btnNext.querySelector('svg').outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+      } else {
+        btnNext.querySelector('span').textContent = 'Selanjutnya';
+        btnNext.className = 'btn btn-primary';
+        btnNext.querySelector('svg').outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+      }
+
+      // If step is Preview, compile everything
+      if (currentStep === 5) {
+        compilePreviewData();
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Previous action
+    document.getElementById('btnPrev').addEventListener('click', () => {
+      navigateToStep(currentStep - 1);
+    });
+
+    // Next / Submit action
+    document.getElementById('btnNext').addEventListener('click', () => {
+      // Validate (bypassed if in Dev Mode)
+      const error = isDevMode ? null : checkStepValidation(currentStep);
+      if (error) {
+        const errBanner = document.getElementById('stepErrorBanner');
+        document.getElementById('stepErrorMsg').innerHTML = error;
+        errBanner.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (currentStep === TOTAL_STEPS) {
+        submitWizardForm();
+      } else {
+        navigateToStep(currentStep + 1);
+      }
+    });
+
+    // Edit linkages in step 5
+    document.querySelectorAll('.edit-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const target = parseInt(trigger.getAttribute('data-target-step'));
+        navigateToStep(target);
+      });
+    });
+
+    // Clicking nodes to navigate if they are already completed, lower than current, or if in Dev Mode
+    document.querySelectorAll('.step-node').forEach(node => {
+      node.addEventListener('click', () => {
+        const target = parseInt(node.getAttribute('data-step'));
+        if (isDevMode) {
+          navigateToStep(target);
+          return;
+        }
+
+        if (target < currentStep) {
+          navigateToStep(target);
+        } else if (target > currentStep) {
+          // Check if we can jump forward (only if validation passes for intermediates)
+          for (let i = currentStep; i < target; i++) {
+            const err = checkStepValidation(i);
+            if (err) {
+              const errBanner = document.getElementById('stepErrorBanner');
+              document.getElementById('stepErrorMsg').innerHTML = `Gagal berpindah langkah. ` + err;
+              errBanner.classList.remove('hidden');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+          }
+          navigateToStep(target);
+        }
+      });
+    });
+
+    // =========================================================================
+    // 4. STEP VALIDATIONS
+    // =========================================================================
+    function checkStepValidation(step) {
+      // Save current input values into formState object dynamically
+      syncDOMToState();
+
+      if (step === 1) {
+        if (!formState.asalSelect) return "Stasiun / Kota Asal wajib dipilih.";
+        if (!formState.tujuanSelect) return "Stasiun / Kota Tujuan wajib dipilih.";
+        if (formState.asalSelect === formState.tujuanSelect) return "Kota Asal dan Kota Tujuan **tidak boleh sama**.";
+        if (!formState.tanggalMudik) return "Tanggal Mudik wajib ditentukan.";
+        
+        if (formState.jenisPerjalanan === 'Pulang Pergi') {
+          if (!formState.tanggalBalik) return "Tanggal Balik wajib ditentukan untuk tipe Pulang Pergi.";
+          if (new Date(formState.tanggalBalik) < new Date(formState.tanggalMudik)) {
+            return "Tanggal Balik **tidak boleh mendahului** tanggal Mudik.";
+          }
+          if (!formState.selectedKuotaBalikId) return "Harap **pilih salah satu kuota KA Balik** pada daftar di bawah.";
+        }
+        if (!formState.selectedKuotaId) return "Harap **pilih salah satu kuota KA Keberangkatan (Mudik)** pada daftar di bawah.";
+      }
+
+      if (step === 2) {
+        if (!formState.jenisKelamin) return "Jenis Kelamin wajib dipilih.";
+        if (!formState.tanggalLahir) return "Tanggal Lahir wajib ditentukan.";
+        if (!formState.profesi) return "Pekerjaan/Profesi wajib dipilih.";
+        if (!formState.nik || formState.nik.length !== 16 || !/^\d+$/.test(formState.nik)) {
+          return "Format NIK KTP tidak valid. Harus **16 digit angka**.";
+        }
+        if (!formState.nomorKK || formState.nomorKK.length !== 16 || !/^\d+$/.test(formState.nomorKK)) {
+          return "Format Nomor Kartu Keluarga (KK) tidak valid. Harus **16 digit angka**.";
+        }
+        if (!formState.nomorSIMC) return "Nomor SIM C wajib diisi.";
+        if (!formState.masaBerlakuSIMC) return "Masa berlaku SIM C wajib ditentukan.";
+        const simDate = new Date(formState.masaBerlakuSIMC);
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        if (simDate < today) {
+          return "Masa berlaku SIM C **telah berakhir (kadaluarsa)**. SIM C harus masih aktif untuk mengikuti program MOTIS.";
+        }
+        if (!formState.pendidikan) return "Pendidikan terakhir wajib dipilih.";
+        
+        if (!formState.provinsiValue || !formState.kabupatenValue || !formState.kecamatanValue || !formState.kelurahanValue) {
+          return "Informasi Daerah (Provinsi, Kab/Kota, Kecamatan, Kelurahan) wajib dipilih dari daftar pencarian.";
+        }
+        if (!formState.alamatLengkap.trim()) return "Alamat Lengkap tinggal wajib diisi.";
+
+        // Document uploads
+        if (!formState.files.uploadKTP) return "Unggah KTP wajib dilampirkan.";
+        if (!formState.files.uploadKK) return "Unggah Kartu Keluarga (KK) wajib dilampirkan.";
+        if (!formState.files.uploadSIM) return "Unggah SIM C wajib dilampirkan.";
+      }
+
+      if (step === 3) {
+        if (!formState.platWilayah || !formState.platNomor || !formState.platHuruf) {
+          return "Format Plat Nomor Polisi motor tidak lengkap.";
+        }
+        if (!/^\d{1,4}$/.test(formState.platNomor)) return "Angka Plat Nomor harus berupa 1-4 digit angka.";
+        if (!/^[a-zA-Z]{1,3}$/.test(formState.platHuruf)) return "Huruf Plat Nomor harus berupa 1-3 karakter alfabet.";
+        if (!formState.merekMotor) return "Merek motor wajib dipilih.";
+        if (!formState.kapasitasMesin) return "Kapasitas mesin motor wajib ditentukan.";
+
+        // Photos
+        if (!formState.fotoDepan) return "Foto motor tampak depan wajib diunggah.";
+        if (!formState.fotoBelakang) return "Foto motor tampak belakang wajib diunggah.";
+        if (!formState.fotoKanan) return "Foto motor tampak kanan wajib diunggah.";
+        if (!formState.fotoKiri) return "Foto motor tampak kiri wajib diunggah.";
+
+        // Logistics
+        if (!formState.lokasiPenyerahan) return "Stasiun penyerahan motor wajib dipilih.";
+        if (!formState.lokasiPengambilan) return "Stasiun pengambilan motor wajib dipilih.";
+        if (!formState.tanggalPenyerahan) return "Tanggal serah-terima motor wajib ditentukan.";
+        if (!formState.waktuPenyerahan) return "Jam penyerahan motor wajib ditentukan.";
+        if (!formState.tanggalVerifikasi) return "Tanggal verifikasi dokumen wajib ditentukan.";
+        if (!formState.waktuVerifikasi) return "Jam verifikasi dokumen wajib ditentukan.";
+      }
+
+      if (step === 4) {
+        if (formState.sudahMudik === 'Sudah') {
+          if (!formState.uploadTiket) return "Unggah bukti tiket kereta api mudik wajib dilampirkan.";
+        } else {
+          if (!formState.tiketAsalSearch.trim()) return "Stasiun asal tiket penumpang wajib ditentukan.";
+          if (!formState.tiketTujuanSearch.trim()) return "Stasiun tujuan tiket penumpang wajib ditentukan.";
+          if (!formState.tanggalPergi) return "Tanggal pergi tiket penumpang wajib ditentukan.";
+          
+          if (formState.jenisPerjalananTiket === 'Pulang Pergi') {
+            if (!formState.tanggalBalikTiket) return "Tanggal balik tiket penumpang wajib ditentukan.";
+          }
+
+          // Validate passenger list
+          const count = parseInt(formState.jumlahPenumpang);
+          for (let i = 0; i < count; i++) {
+            const p = formState.passengers[i];
+            if (!p || !p.nama.trim()) return `Nama penumpang ke-${i+1} tidak boleh kosong.`;
+            if (!p.nik || p.nik.length !== 16 || !/^\d+$/.test(p.nik)) {
+              return `NIK penumpang ke-${i+1} tidak valid. Harus **16 digit angka**.`;
+            }
+          }
+        }
+      }
+
+      if (step === 5) {
+        const consent = document.getElementById('consentCheck').checked;
+        if (!consent) return "Anda wajib mencentang persetujuan keabsahan data sebelum mengirim formulir.";
+      }
+
+      return null;
+    }
+
+    // Sync input components values into state object
+    function syncDOMToState() {
+      // Step 1
+      const radioJP = document.querySelector('input[name="jenisPerjalanan"]:checked');
+      if (radioJP) formState.jenisPerjalanan = radioJP.value;
+      formState.asalSelect = document.getElementById('asalSelect').value;
+      formState.tujuanSelect = document.getElementById('tujuanSelect').value;
+      formState.tanggalMudik = document.getElementById('tanggalMudik').value;
+      formState.tanggalBalik = document.getElementById('tanggalBalik').value;
+
+      // Step 2
+      formState.jenisKelamin = document.getElementById('jenisKelamin').value;
+      formState.tanggalLahir = document.getElementById('tanggalLahir').value;
+      formState.profesi = document.getElementById('profesi').value;
+      formState.nik = document.getElementById('nik').value;
+      formState.nomorKK = document.getElementById('nomorKK').value;
+      formState.nomorSIMC = document.getElementById('nomorSIMC').value;
+      formState.masaBerlakuSIMC = document.getElementById('masaBerlakuSIMC').value;
+      formState.pendidikan = document.getElementById('pendidikan').value;
+      formState.provinsiValue = document.getElementById('provinsiValue').value;
+      formState.kabupatenValue = document.getElementById('kabupatenValue').value;
+      formState.kecamatanValue = document.getElementById('kecamatanValue').value;
+      formState.kelurahanValue = document.getElementById('kelurahanValue').value;
+      formState.alamatLengkap = document.getElementById('alamatLengkap').value;
+
+      // Step 3
+      formState.platWilayah = document.getElementById('platWilayah').value;
+      formState.platNomor = document.getElementById('platNomor').value;
+      formState.platHuruf = document.getElementById('platHuruf').value;
+      formState.merekMotor = document.getElementById('merekMotor').value;
+      formState.kapasitasMesin = document.getElementById('kapasitasMesin').value;
+      formState.lokasiPenyerahan = document.getElementById('lokasiPenyerahan').value;
+      formState.lokasiPengambilan = document.getElementById('lokasiPengambilan').value;
+      formState.tanggalPenyerahan = document.getElementById('tanggalPenyerahan').value;
+      formState.waktuPenyerahan = document.getElementById('waktuPenyerahan').value;
+      formState.tanggalVerifikasi = document.getElementById('tanggalVerifikasi').value;
+      formState.waktuVerifikasi = document.getElementById('waktuVerifikasi').value;
+
+      // Step 4
+      const radioSM = document.querySelector('input[name="sudahMudik"]:checked');
+      if (radioSM) formState.sudahMudik = radioSM.value;
+      
+      const radioJPT = document.querySelector('input[name="jenisPerjalananTiket"]:checked');
+      if (radioJPT) formState.jenisPerjalananTiket = radioJPT.value;
+      
+      formState.tiketAsalSearch = document.getElementById('tiketAsalSearch').value;
+      formState.tiketTujuanSearch = document.getElementById('tiketTujuanSearch').value;
+      formState.jumlahPenumpang = parseInt(document.getElementById('jumlahPenumpang').value) || 1;
+      formState.tanggalPergi = document.getElementById('tanggalPergi').value;
+      formState.tanggalBalikTiket = document.getElementById('tanggalBalikTiket').value;
+
+      // Read dynamic passengers values
+      const count = formState.jumlahPenumpang;
+      formState.passengers = [];
+      for (let i = 0; i < count; i++) {
+        const inputName = document.getElementById(`penumpangNama_${i}`);
+        const inputNIK = document.getElementById(`penumpangNik_${i}`);
+        formState.passengers.push({
+          nama: inputName ? inputName.value : '',
+          nik: inputNIK ? inputNIK.value : ''
+        });
+      }
+    }
+
+    // =========================================================================
+    // 5. STEP 1 LOGIC: RADIO CARD & SCHEDULE SIMULATION
+    // =========================================================================
+    const optOnce = document.getElementById('optOnce');
+    const optRound = document.getElementById('optRound');
+    const tglBalikGroup = document.getElementById('tanggalBalikGroup');
+
+    optOnce.addEventListener('click', () => {
+      optOnce.classList.add('selected');
+      optRound.classList.remove('selected');
+      tglBalikGroup.style.display = 'none';
+      document.getElementById('scheduleReturnArea').style.display = 'none';
+    });
+
+    optRound.addEventListener('click', () => {
+      optRound.classList.add('selected');
+      optOnce.classList.remove('selected');
+      tglBalikGroup.style.display = 'block';
+    });
+
+    // Cek Kuota Async Simulation
+    document.getElementById('btnCekKuota').addEventListener('click', () => {
+      syncDOMToState();
+      
+      if (!formState.asalSelect || !formState.tujuanSelect) {
+        alert("Harap pilih stasiun asal dan stasiun tujuan terlebih dahulu.");
+        return;
+      }
+      if (formState.asalSelect === formState.tujuanSelect) {
+        alert("Stasiun asal dan stasiun tujuan tidak boleh sama.");
+        return;
+      }
+      if (!formState.tanggalMudik) {
+        alert("Harap pilih tanggal mudik.");
+        return;
+      }
+
+      const btn = document.getElementById('btnCekKuota');
+      btn.disabled = true;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.7s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Mencari Jadwal KA...`;
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Cek Ketersediaan Kuota Pengiriman`;
+
+        renderSchedules();
+      }, 1000);
+    });
+
+    function renderSchedules() {
+      // Mock departure trains
+      const departureGrid = document.getElementById('departureScheduleGrid');
+      const originLbl = MASTER_STATIONS.find(s => s.id === formState.asalSelect).label.split(' ')[0];
+      const destLbl = MASTER_STATIONS.find(s => s.id === formState.tujuanSelect).label.split(' ')[0];
+
+      const departureList = [
+        { id: 'KA-MUDIK-01', name: 'Motis Express Utara', code: 'KA 8021', t1: '07:30', t2: '15:45', dur: '8j 15m', quota: 48 },
+        { id: 'KA-MUDIK-02', name: 'Kargo Motis Selatan', code: 'KA 8023', t1: '13:00', t2: '21:10', dur: '8j 10m', quota: 25 },
+        { id: 'KA-MUDIK-03', name: 'Motis Malam Fajar', code: 'KA 8025', t1: '21:00', t2: '05:30', dur: '8j 30m', quota: 12 }
+      ];
+
+      departureGrid.innerHTML = '';
+      departureList.forEach(tr => {
+        const card = document.createElement('div');
+        card.className = `schedule-card ${formState.selectedKuotaId === tr.id ? 'selected' : ''}`;
+        card.setAttribute('data-id', tr.id);
+        card.innerHTML = `
+          <div class="schedule-header">
+            <span class="train-name">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/></svg>
+              ${tr.name}
+            </span>
+            <span class="train-code">${tr.code}</span>
+          </div>
+          <div class="schedule-body">
+            <div class="station-block">
+              <div class="station-time">${tr.t1}</div>
+              <div class="station-name">${originLbl}</div>
+            </div>
+            <div class="duration-block">
+              <div class="duration-line"></div>
+              <div class="duration-value">${tr.dur}</div>
+            </div>
+            <div class="station-block" style="text-align:right">
+              <div class="station-time">${tr.t2}</div>
+              <div class="station-name">${destLbl}</div>
+            </div>
+          </div>
+          <div class="quota-info">
+            <span>Sisa Kuota Motor:</span>
+            <span class="quota-left">${tr.quota} Slot</span>
+          </div>
+        `;
+        
+        card.addEventListener('click', () => {
+          document.querySelectorAll('#departureScheduleGrid .schedule-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          formState.selectedKuotaId = tr.id;
+          document.getElementById('selectedKuotaId').value = tr.id;
+        });
+
+        departureGrid.appendChild(card);
+      });
+
+      document.getElementById('departureCountBadge').textContent = '3 Rute Ditemukan';
+      document.getElementById('scheduleDepartureArea').style.display = 'block';
+
+      // If Return mudik
+      if (formState.jenisPerjalanan === 'Pulang Pergi' && formState.tanggalBalik) {
+        const returnGrid = document.getElementById('returnScheduleGrid');
+        const returnList = [
+          { id: 'KA-BALIK-01', name: 'Motis Express Balik', code: 'KA 8022', t1: '09:00', t2: '17:15', dur: '8j 15m', quota: 62 },
+          { id: 'KA-BALIK-02', name: 'Kargo Motis Arus Balik', code: 'KA 8024', t1: '16:00', t2: '00:10', dur: '8j 10m', quota: 38 }
+        ];
+
+        returnGrid.innerHTML = '';
+        returnList.forEach(tr => {
+          const card = document.createElement('div');
+          card.className = `schedule-card ${formState.selectedKuotaBalikId === tr.id ? 'selected' : ''}`;
+          card.setAttribute('data-id', tr.id);
+          card.innerHTML = `
+            <div class="schedule-header">
+              <span class="train-name">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/></svg>
+                ${tr.name}
+              </span>
+              <span class="train-code">${tr.code}</span>
+            </div>
+            <div class="schedule-body">
+              <div class="station-block">
+                <div class="station-time">${tr.t1}</div>
+                <div class="station-name">${destLbl}</div>
+              </div>
+              <div class="duration-block">
+                <div class="duration-line"></div>
+                <div class="duration-value">${tr.dur}</div>
+              </div>
+              <div class="station-block" style="text-align:right">
+                <div class="station-time">${tr.t2}</div>
+                <div class="station-name">${originLbl}</div>
+              </div>
+            </div>
+            <div class="quota-info">
+              <span>Sisa Kuota Motor:</span>
+              <span class="quota-left">${tr.quota} Slot</span>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            document.querySelectorAll('#returnScheduleGrid .schedule-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            formState.selectedKuotaBalikId = tr.id;
+            document.getElementById('selectedKuotaBalikId').value = tr.id;
+          });
+
+          returnGrid.appendChild(card);
+        });
+      }
+    }
+
+    function makeAutocomplete(inputEl, suggestionsEl, valueEl, getListFn, onSelectFn) {
+      let currentFocus = -1;
+
+      function renderSuggestions() {
+        const val = inputEl.value.toUpperCase();
+        closeAllLists();
+
+        const list = getListFn(val);
+        if (list.length === 0) {
+          suggestionsEl.classList.add('hidden');
+          return;
+        }
+
+        suggestionsEl.innerHTML = '';
+        currentFocus = -1;
+
+        list.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = 'suggestion-item';
+          div.textContent = item;
+          div.addEventListener('click', () => {
+            inputEl.value = item;
+            valueEl.value = item;
+            suggestionsEl.classList.add('hidden');
+            if (onSelectFn) onSelectFn(item);
+          });
+          suggestionsEl.appendChild(div);
+        });
+        suggestionsEl.classList.remove('hidden');
+      }
+
+      inputEl.addEventListener('input', () => {
+        const val = inputEl.value.toUpperCase();
+        if (valueEl.value.toUpperCase() !== val) {
+          valueEl.value = '';
+          if (onSelectFn) onSelectFn('');
+        }
+        renderSuggestions();
+      });
+
+      inputEl.addEventListener('focus', renderSuggestions);
+      
+      inputEl.addEventListener('click', e => {
+        e.stopPropagation();
+        renderSuggestions();
+      });
+
+      inputEl.addEventListener('keydown', e => {
+        let items = suggestionsEl.querySelectorAll('.suggestion-item');
+        if (e.key === 'ArrowDown') {
+          currentFocus++;
+          addActive(items);
+        } else if (e.key === 'ArrowUp') {
+          currentFocus--;
+          addActive(items);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (currentFocus > -1 && items[currentFocus]) {
+            items[currentFocus].click();
+          }
+        }
+      });
+
+      function addActive(items) {
+        if (!items || items.length === 0) return;
+        removeActive(items);
+        if (currentFocus >= items.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = items.length - 1;
+        items[currentFocus].classList.add('highlighted');
+        items[currentFocus].scrollIntoView({ block: 'nearest' });
+      }
+
+      function removeActive(items) {
+        items.forEach(i => i.classList.remove('highlighted'));
+      }
+
+      function closeAllLists() {
+        suggestionsEl.classList.add('hidden');
+      }
+
+      document.addEventListener('click', e => {
+        if (e.target !== inputEl && e.target !== suggestionsEl) {
+          closeAllLists();
+        }
+      });
+    }
+
+    // Connect address dropdowns (Cascading Selects)
+    const provSelect = document.getElementById('provinsiSelect');
+    const kabSelect = document.getElementById('kabupatenSelect');
+    const kecSelect = document.getElementById('kecamatanSelect');
+    const kelSelect = document.getElementById('kelurahanSelect');
+
+    const provVal = document.getElementById('provinsiValue');
+    const kabVal = document.getElementById('kabupatenValue');
+    const kecVal = document.getElementById('kecamatanValue');
+    const kelVal = document.getElementById('kelurahanValue');
+
+    // Populate Provinces
+    Object.keys(REGION_DB).forEach(prov => {
+      provSelect.add(new Option(prov, prov));
+    });
+
+    provSelect.addEventListener('change', () => {
+      const selectedProv = provSelect.value;
+      provVal.value = selectedProv;
+
+      // Reset & disable sub dropdowns
+      kabSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kabupaten/Kota --</option>';
+      kabSelect.disabled = true;
+      kabVal.value = '';
+
+      kecSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kecamatan --</option>';
+      kecSelect.disabled = true;
+      kecVal.value = '';
+
+      kelSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelurahan --</option>';
+      kelSelect.disabled = true;
+      kelVal.value = '';
+
+      if (selectedProv) {
+        kabSelect.disabled = false;
+        Object.keys(REGION_DB[selectedProv] || {}).forEach(kab => {
+          kabSelect.add(new Option(kab, kab));
+        });
+      }
+      checkStepValidation(currentStep);
+    });
+
+    kabSelect.addEventListener('change', () => {
+      const selectedProv = provSelect.value;
+      const selectedKab = kabSelect.value;
+      kabVal.value = selectedKab;
+
+      // Reset & disable sub dropdowns
+      kecSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kecamatan --</option>';
+      kecSelect.disabled = true;
+      kecVal.value = '';
+
+      kelSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelurahan --</option>';
+      kelSelect.disabled = true;
+      kelVal.value = '';
+
+      if (selectedKab) {
+        kecSelect.disabled = false;
+        Object.keys((REGION_DB[selectedProv] || {})[selectedKab] || {}).forEach(kec => {
+          kecSelect.add(new Option(kec, kec));
+        });
+      }
+      checkStepValidation(currentStep);
+    });
+
+    kecSelect.addEventListener('change', () => {
+      const selectedProv = provSelect.value;
+      const selectedKab = kabSelect.value;
+      const selectedKec = kecSelect.value;
+      kecVal.value = selectedKec;
+
+      // Reset & disable kelurahan dropdown
+      kelSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelurahan --</option>';
+      kelSelect.disabled = true;
+      kelVal.value = '';
+
+      if (selectedKec) {
+        kelSelect.disabled = false;
+        const list = ((REGION_DB[selectedProv] || {})[selectedKab] || {})[selectedKec] || [];
+        list.forEach(kel => {
+          kelSelect.add(new Option(kel, kel));
+        });
+      }
+      checkStepValidation(currentStep);
+    });
+
+    kelSelect.addEventListener('change', () => {
+      kelVal.value = kelSelect.value;
+      checkStepValidation(currentStep);
+    });
+
+    // Document dropzones handlers
+    function setupUploadDragDrop(zoneId, inputId, previewId, stateKey) {
+      const zone = document.getElementById(zoneId);
+      const input = document.getElementById(inputId);
+      const prev = document.getElementById(previewId);
+
+      // Trigger file explorer when clicking the zone (avoid when clicking remove button)
+      zone.addEventListener('click', () => input.click());
+
+      // Bind click handler for floating remove button
+      const removeBtn = zone.querySelector('.upload-remove-btn');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // CRITICAL: Stop bubbling to prevent opening file select
+          input.value = '';
+          zone.classList.remove('success');
+          
+          if (prev) {
+            prev.innerHTML = '';
+            prev.classList.add('hidden');
+          }
+          
+          // Clear formState entry
+          if (stateKey.startsWith('files.')) {
+            formState.files[stateKey.split('.')[1]] = null;
+          } else {
+            formState[stateKey] = null;
+          }
+          
+          checkStepValidation(currentStep);
+        });
+      }
+
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('dragover');
+      });
+
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      input.addEventListener('change', () => {
+        if (input.files.length > 0) {
+          handleFile(input.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        if (file.size > 2 * 1024 * 1024) {
+          alert(`File "${file.name}" melebihi ukuran maksimal 2MB.`);
+          return;
+        }
+
+        // Save file name in formState
+        if (stateKey.startsWith('files.')) {
+          formState.files[stateKey.split('.')[1]] = file.name;
+        } else {
+          formState[stateKey] = file.name;
+        }
+
+        // Populate Success State DOM elements
+        const nameEl = zone.querySelector('.upload-file-name');
+        const sizeEl = zone.querySelector('.upload-file-size');
+        if (nameEl) nameEl.textContent = file.name;
+        if (sizeEl) sizeEl.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+
+        zone.classList.add('success');
+        
+        // Retain backward compatibility for old previews just in case
+        if (prev) {
+          prev.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+          `;
+          prev.classList.remove('hidden');
+        }
+        
+        checkStepValidation(currentStep);
+      }
+    }
+
+    setupUploadDragDrop('zoneKTP', 'uploadKTP', 'previewKTP', 'files.uploadKTP');
+    setupUploadDragDrop('zoneKK', 'uploadKK', 'previewKK', 'files.uploadKK');
+    setupUploadDragDrop('zoneSIM', 'uploadSIM', 'previewSIM', 'files.uploadSIM');
+    setupUploadDragDrop('zoneSTNK', 'uploadSTNK', 'previewSTNK', 'files.uploadSTNK');
+
+    // =========================================================================
+    // 7. STEP 3 LOGIC: PLATE, CC, VEHICLE UPLOADS
+    // =========================================================================
+    setupUploadDragDrop('zoneFotoDepan', 'fotoDepan', 'previewFotoDepan', 'fotoDepan');
+    setupUploadDragDrop('zoneFotoBelakang', 'fotoBelakang', 'previewFotoBelakang', 'fotoBelakang');
+    setupUploadDragDrop('zoneFotoKanan', 'fotoKanan', 'previewFotoKanan', 'fotoKanan');
+    setupUploadDragDrop('zoneFotoKiri', 'fotoKiri', 'previewFotoKiri', 'fotoKiri');
+
+    // =========================================================================
+    // 8. STEP 4 LOGIC: TICKET INTEGRATION & DYNAMIC PASSENGER GRID
+    // =========================================================================
+    const optTiketSudah = document.getElementById('optTiketSudah');
+    const optTiketBelum = document.getElementById('optTiketBelum');
+    const subSudah = document.getElementById('subFormTiketSudah');
+    const subBelum = document.getElementById('subFormTiketBelum');
+
+    function toggleTicketSection(status) {
+      if (status === 'Sudah') {
+        optTiketSudah.classList.add('selected');
+        optTiketBelum.classList.remove('selected');
+        subSudah.classList.remove('hidden');
+        subBelum.classList.add('hidden');
+        formState.sudahMudik = 'Sudah';
+        const radio = optTiketSudah.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+      } else {
+        optTiketBelum.classList.add('selected');
+        optTiketSudah.classList.remove('selected');
+        subBelum.classList.remove('hidden');
+        subSudah.classList.add('hidden');
+        formState.sudahMudik = 'Belum';
+        const radio = optTiketBelum.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+        renderPassengerInputs();
+      }
+    }
+
+    optTiketSudah.addEventListener('click', (e) => {
+      const radio = optTiketSudah.querySelector('input[type="radio"]');
+      if (e.target === radio) return;
+      e.preventDefault();
+      toggleTicketSection('Sudah');
+    });
+
+    optTiketBelum.addEventListener('click', (e) => {
+      const radio = optTiketBelum.querySelector('input[type="radio"]');
+      if (e.target === radio) return;
+      e.preventDefault();
+      toggleTicketSection('Belum');
+    });
+
+    document.querySelectorAll('input[name="sudahMudik"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        toggleTicketSection(radio.value);
+      });
+    });
+
+    toggleTicketSection(formState.sudahMudik);
+
+    setupUploadDragDrop('zoneTiketMudik', 'uploadTiket', 'previewTiket', 'uploadTiket');
+
+    const inputJmlPenumpang = document.getElementById('jumlahPenumpang');
+    inputJmlPenumpang.addEventListener('change', () => {
+      let val = parseInt(inputJmlPenumpang.value) || 1;
+      if (val < 1) val = 1;
+      if (val > 2) val = 2; // MOTIS limits to maximum 2 adult passengers
+      inputJmlPenumpang.value = val;
+      formState.jumlahPenumpang = val;
+      renderPassengerInputs();
+    });
+
+    // Dynamic passenger tickets travel settings
+    const jptRadios = document.getElementsByName('jenisPerjalananTiket');
+    jptRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.getElementById('tanggalBalikTiketGroup').style.display = radio.value === 'Pulang Pergi' ? 'block' : 'none';
+      });
+    });
+
+    function renderPassengerInputs() {
+      const grid = document.getElementById('passengerInputsGrid');
+      const count = formState.jumlahPenumpang;
+      grid.innerHTML = '';
+
+      for (let i = 0; i < count; i++) {
+        const card = document.createElement('div');
+        card.className = 'passenger-card';
+
+        // Set default values for first passenger (inherits from user profile/state)
+        let defaultNama = '';
+        let defaultNIK = '';
+        if (i === 0) {
+          defaultNama = document.getElementById('namaLengkap').value;
+          defaultNIK = document.getElementById('nik').value || formState.nik || '';
+        } else {
+          // If we had passenger 2 values saved in state, pull them
+          if (formState.passengers && formState.passengers[i]) {
+            defaultNama = formState.passengers[i].nama;
+            defaultNIK = formState.passengers[i].nik;
+          }
+        }
+
+        card.innerHTML = `
+          <div class="passenger-card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Penumpang ${i + 1}</span>
+            <span class="p-badge">${i === 0 ? 'Pendaftar Utama' : 'Anggota Keluarga (1 KK)'}</span>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="penumpangNama_${i}">Nama Lengkap <span class="required">*</span></label>
+              <input type="text" class="form-input" id="penumpangNama_${i}" placeholder="Nama sesuai identitas KTP/KK" value="${defaultNama}" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="penumpangNik_${i}">Nomor Induk NIK <span class="required">*</span></label>
+              <input type="text" class="form-input" id="penumpangNik_${i}" maxlength="16" placeholder="16 Digit NIK" value="${defaultNIK}" required>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    // =========================================================================
+    // 9. STEP 5 LOGIC: COMPILE PREVIEW DATA SUMMARY
+    // =========================================================================
+    function compilePreviewData() {
+      // 1. Route
+      document.getElementById('prevJenisPerjalanan').textContent = formState.jenisPerjalanan;
+      document.getElementById('prevRutePengiriman').innerHTML = `
+        <strong>${formState.asalSelect}</strong>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline; margin:0 4px; vertical-align:middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <strong>${formState.tujuanSelect}</strong>
+      `;
+      document.getElementById('prevJadwalPergi').innerHTML = `Tanggal: <strong>${formState.tanggalMudik}</strong> (Kereta: <code style="color:var(--color-primary);font-weight:700">${formState.selectedKuotaId}</code>)`;
+      
+      const balRow = document.getElementById('prevJadwalBalikRow');
+      if (formState.jenisPerjalanan === 'Pulang Pergi') {
+        document.getElementById('prevJadwalBalik').innerHTML = `Tanggal: <strong>${formState.tanggalBalik}</strong> (Kereta: <code style="color:var(--color-primary);font-weight:700">${formState.selectedKuotaBalikId}</code>)`;
+        balRow.style.display = 'table-row';
+      } else {
+        balRow.style.display = 'none';
+      }
+
+      // 2. Participant
+      document.getElementById('prevNamaNIK').innerHTML = `Nama: <strong>${document.getElementById('namaLengkap').value}</strong><br>NIK: <code>${formState.nik}</code>`;
+      document.getElementById('prevKontak').textContent = `${document.getElementById('noHandphone').value} | ${document.getElementById('emailPeserta').value}`;
+      document.getElementById('prevKKSim').innerHTML = `No. KK: <code>${formState.nomorKK}</code><br>No. SIM C: <code>${formState.nomorSIMC}</code> (Masa Berlaku: ${formState.masaBerlakuSIMC})`;
+      document.getElementById('prevAlamat').innerHTML = `${formState.alamatLengkap}<br>Kel. ${formState.kelurahanValue}, Kec. ${formState.kecamatanValue}, ${formState.kabupatenValue}, Prov. ${formState.provinsiValue}`;
+      
+      let docFiles = `
+        <div class="preview-upload-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> KTP: ${formState.files.uploadKTP}</div>
+        <div class="preview-upload-item" style="margin-left: 6px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> KK: ${formState.files.uploadKK}</div>
+        <div class="preview-upload-item" style="margin-left: 6px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> SIM C: ${formState.files.uploadSIM}</div>
+      `;
+      if (formState.files.uploadSTNK) {
+        docFiles += `<br><div class="preview-upload-item" style="margin-top: 6px; background:#F0FDF4; color:#15803D;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> STNK: ${formState.files.uploadSTNK}</div>`;
+      }
+      document.getElementById('prevDokumenFiles').innerHTML = docFiles;
+
+      // 3. Vehicle
+      const fullPlate = `${formState.platWilayah} ${formState.platNomor} ${formState.platHuruf}`.toUpperCase();
+      document.getElementById('prevPlatMotor').innerHTML = `<code style="font-size:15px; font-weight:800; background:var(--gray-900); color:#fff; padding:4px 10px; border-radius:6px; font-family:var(--font-mono);">${fullPlate}</code>`;
+      document.getElementById('prevMerekCC').textContent = `${formState.merekMotor} – (${formState.kapasitasMesin})`;
+      document.getElementById('prevLokasiLogistik').innerHTML = `Serah: <strong>Stasiun ${formState.lokasiPenyerahan}</strong><br>Ambil: <strong>Stasiun ${formState.lokasiPengambilan}</strong>`;
+      document.getElementById('prevJadwalLogistik').innerHTML = `Drop-Off Motor: <strong>${formState.tanggalPenyerahan} (${formState.waktuPenyerahan})</strong><br>Verifikasi Dokumen: <strong>${formState.tanggalVerifikasi} (${formState.waktuVerifikasi})</strong>`;
+      
+      document.getElementById('prevFotoMotor').innerHTML = `
+        <div class="preview-upload-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Depan: ${formState.fotoDepan}</div>
+        <div class="preview-upload-item" style="margin-left: 6px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Belakang: ${formState.fotoBelakang}</div>
+        <div class="preview-upload-item" style="margin-top: 6px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Kanan: ${formState.fotoKanan}</div>
+        <div class="preview-upload-item" style="margin-top: 6px; margin-left: 6px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Kiri: ${formState.fotoKiri}</div>
+      `;
+
+      // 4. Ticket Info
+      document.getElementById('prevKepemilikanTiket').innerHTML = formState.sudahMudik === 'Sudah' 
+        ? '<span class="badge badge-success">Sudah Memiliki Tiket Sendiri</span>' 
+        : '<span class="badge badge-warning">Mengajukan Tiket Terintegrasi</span>';
+      
+      const prevUnggahRow = document.getElementById('prevUnggahTiketRow');
+      const prevIntegRow = document.getElementById('prevIntegrasiTiketRow');
+      
+      if (formState.sudahMudik === 'Sudah') {
+        prevUnggahRow.style.display = 'table-row';
+        prevIntegRow.style.display = 'none';
+        document.getElementById('prevUnggahTiketVal').innerHTML = `<div class="preview-upload-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Tiket: ${formState.uploadTiket}</div>`;
+      } else {
+        prevUnggahRow.style.display = 'none';
+        prevIntegRow.style.display = 'table-row';
+
+        let paxString = '';
+        formState.passengers.forEach((p, idx) => {
+          paxString += `<br>Penumpang ${idx+1}: <strong>${p.nama}</strong> (NIK: <code>${p.nik}</code>)`;
+        });
+
+        document.getElementById('prevIntegrasiTiketVal').innerHTML = `
+          Tipe Tiket: <strong>${formState.jenisPerjalananTiket}</strong><br>
+          Rute: <strong>${formState.tiketAsalSearch} → ${formState.tiketTujuanSearch}</strong> (Tanggal Pergi: ${formState.tanggalPergi}${formState.jenisPerjalananTiket === 'Pulang Pergi' ? ', Tanggal Balik: ' + formState.tanggalBalikTiket : ''})<br>
+          Jumlah Penumpang: <strong>${formState.jumlahPenumpang} Orang</strong>
+          ${paxString}
+        `;
+      }
+    }
+
+    // =========================================================================
+    // 10. WIZARD SUBMIT ACTION
+    // =========================================================================
+    function submitWizardForm() {
+      // Simulate form submission
+      const btn = document.getElementById('btnNext');
+      btn.disabled = true;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.7s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Mengirim Data...`;
+
+      setTimeout(() => {
+        // Modal Receipt
+        const randomReg = 'MOTIS-2026-' + Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('receiptRegNumber').textContent = randomReg;
+        document.getElementById('receiptName').textContent = document.getElementById('namaLengkap').value;
+        
+        const fullPlate = `${formState.platWilayah} ${formState.platNomor} ${formState.platHuruf}`.toUpperCase();
+        document.getElementById('receiptPlat').textContent = fullPlate;
+
+        btn.disabled = false;
+        btn.innerHTML = `<span>Kirim Pendaftaran</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+        // Open Success Modal
+        document.getElementById('successModalPopup').classList.add('is-open');
+
+        // Clear local inputs and localStorage if desired (but keeping session user logged in)
+      }, 1500);
+    }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
