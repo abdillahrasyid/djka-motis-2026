@@ -927,6 +927,76 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
+    /* ── OCR vs Manual System Styles ─────────────────── */
+    .ocr-selector-container {
+      margin-bottom: 24px;
+    }
+    .ocr-highlight {
+      background-color: #F0FDF4 !important;
+      border-color: var(--color-success) !important;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15) !important;
+      transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+    .ocr-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-success);
+      margin-top: 4px;
+    }
+    .ocr-badge svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 3;
+    }
+    
+    /* Drag-and-drop area scanning overlay */
+    .ocr-scanner-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: var(--radius-card-lg);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #fff;
+      backdrop-filter: blur(2px);
+      transition: opacity 0.25s ease;
+    }
+    .ocr-scanner-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to bottom, transparent, #3B82F6, #60A5FA, transparent);
+      box-shadow: 0 0 12px #3B82F6, 0 0 20px #60A5FA;
+      animation: ocrScan 1.5s ease-in-out infinite;
+      z-index: 101;
+    }
+    .ocr-scanner-text {
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      z-index: 102;
+    }
+    
+    @keyframes ocrScan {
+      0% { top: 0%; }
+      50% { top: 96%; }
+      100% { top: 0%; }
+    }
+    
+    /* Layout dynamic swapping animation transition */
+    #documentUploadSection, #personalFieldsSection {
+      transition: order 0.3s ease, transform 0.3s ease;
+    }
   </style>
 </head>
 <body>
@@ -1120,279 +1190,328 @@
             <!-- ======================================================= -->
             <div class="form-step-panel hidden" id="stepPanel2">
               
-              <div class="form-step-sub">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Profil Akun & Demografis
-              </div>
-
-              <div class="form-grid-3">
-                <div class="form-group">
-                  <label class="form-label" for="namaLengkap">Nama Lengkap</label>
-                  <input type="text" class="form-input" id="namaLengkap" disabled>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="noHandphone">No. Handphone (WA)</label>
-                  <input type="text" class="form-input" id="noHandphone" disabled>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="emailPeserta">Alamat Email</label>
-                  <input type="email" class="form-input" id="emailPeserta" disabled>
-                </div>
-              </div>
-
-              <div class="form-grid-3">
-                <div class="form-group">
-                  <label class="form-label" for="jenisKelamin">Jenis Kelamin <span class="required">*</span></label>
-                  <select class="form-select" id="jenisKelamin" required>
-                    <option value="" disabled selected>-- Pilih --</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="tanggalLahir">Tanggal Lahir <span class="required">*</span></label>
-                  <input type="date" class="form-input" id="tanggalLahir" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="profesi">Pekerjaan / Profesi <span class="required">*</span></label>
-                  <select class="form-select" id="profesi" required>
-                    <option value="" disabled selected>-- Pilih --</option>
-                    <option value="Karyawan Swasta">Karyawan Swasta</option>
-                    <option value="Pegawai Negeri (PNS)">Pegawai Negeri (PNS)</option>
-                    <option value="TNI / POLRI">TNI / POLRI</option>
-                    <option value="Wiraswasta">Wiraswasta</option>
-                    <option value="Petani / Nelayan">Petani / Nelayan</option>
-                    <option value="Mahasiswa / Pelajar">Mahasiswa / Pelajar</option>
-                    <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
-                    <option value="Lainnya">Lainnya</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="nik">Nomor Induk Kependudukan (NIK KTP) <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="nik" maxlength="16" placeholder="16 Digit Angka NIK" pattern="[0-9]{16}" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="nomorKK">Nomor Kartu Keluarga (KK) <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="nomorKK" maxlength="16" placeholder="16 Digit Angka KK" pattern="[0-9]{16}" required>
-                </div>
-              </div>
-
-              <div class="form-grid-2">
-                <div class="form-group">
-                  <label class="form-label" for="nomorSIMC">Nomor SIM C <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="nomorSIMC" placeholder="Contoh: 0912-3456-7890" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="masaBerlakuSIMC">Masa Berlaku SIM C <span class="required">*</span></label>
-                  <input type="date" class="form-input" id="masaBerlakuSIMC" required>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="pendidikan">Pendidikan Terakhir <span class="required">*</span></label>
-                <select class="form-select" id="pendidikan" required>
-                  <option value="" disabled selected>-- Pilih Pendidikan --</option>
-                  <option value="SD">SD Sederajat</option>
-                  <option value="SMP">SMP Sederajat</option>
-                  <option value="SMA / SMK">SMA / SMK Sederajat</option>
-                  <option value="Diploma (D1/D2/D3)">Diploma (D1/D2/D3)</option>
-                  <option value="Sarjana (D4/S1)">Sarjana (D4/S1)</option>
-                  <option value="Pascasarjana (S2/S3)">Pascasarjana (S2/S3)</option>
-                </select>
-              </div>
-
-              <div class="form-step-sub">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Alamat Tinggal Sesuai KTP
-              </div>
-
-              <div class="form-grid-2">
-                <!-- Provinsi Dropdown -->
-                <div class="form-group">
-                  <label class="form-label" for="provinsiSelect">Provinsi <span class="required">*</span></label>
-                  <select class="form-select" id="provinsiSelect" required>
-                    <option value="" disabled selected>-- Pilih Provinsi --</option>
-                  </select>
-                  <input type="hidden" id="provinsiValue">
-                </div>
-
-                <!-- Kabupaten / Kota Dropdown -->
-                <div class="form-group">
-                  <label class="form-label" for="kabupatenSelect">Kabupaten / Kota <span class="required">*</span></label>
-                  <select class="form-select" id="kabupatenSelect" disabled required>
-                    <option value="" disabled selected>-- Pilih Kabupaten/Kota --</option>
-                  </select>
-                  <input type="hidden" id="kabupatenValue">
-                </div>
-              </div>
-
-              <div class="form-grid-2">
-                <!-- Kecamatan Dropdown -->
-                <div class="form-group">
-                  <label class="form-label" for="kecamatanSelect">Kecamatan <span class="required">*</span></label>
-                  <select class="form-select" id="kecamatanSelect" disabled required>
-                    <option value="" disabled selected>-- Pilih Kecamatan --</option>
-                  </select>
-                  <input type="hidden" id="kecamatanValue">
-                </div>
-
-                <!-- Kelurahan Dropdown -->
-                <div class="form-group">
-                  <label class="form-label" for="kelurahanSelect">Kelurahan <span class="required">*</span></label>
-                  <select class="form-select" id="kelurahanSelect" disabled required>
-                    <option value="" disabled selected>-- Pilih Kelurahan --</option>
-                  </select>
-                  <input type="hidden" id="kelurahanValue">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="alamatLengkap">Alamat Jalan / RT / RW / No. Rumah <span class="required">*</span></label>
-                <textarea class="form-textarea" id="alamatLengkap" placeholder="Masukkan nama jalan lengkap, blok, nomor rumah, RT/RW secara mendetail" required></textarea>
-              </div>
-
-              <div class="form-step-sub">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Unggah Dokumen Verifikasi (Maksimal 2 MB per file)
-              </div>
-
-              <div class="form-grid-2">
-                <!-- KTP Upload -->
-                <div class="upload-zone-wrapper">
-                  <label class="form-label">Kartu Tanda Penduduk (KTP) <span class="required">*</span></label>
-                  <div class="upload-zone" id="zoneKTP">
-                    <input type="file" id="uploadKTP" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
-                    <!-- Default State -->
-                    <div class="upload-default-state">
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      </div>
-                      <div class="upload-title">Pilih / Seret KTP</div>
-                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+              <!-- ── OCR vs Manual Selector ── -->
+              <div class="ocr-selector-container">
+                <label class="form-label" style="margin-bottom: 8px;">Metode Pengisian Data Peserta <span class="required">*</span></label>
+                <div class="radio-card-grid">
+                  <div class="radio-card selected" id="ocrSelectorCard" style="border-width: 1.5px;">
+                    <input type="radio" name="input_method" id="methodOCR" value="ocr" checked style="margin-top:2px">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title" style="font-size:13.5px">Pengisian Cepat via OCR (Otomatis)</div>
+                      <div class="radio-card-desc" style="font-size:11px">Unggah foto KTP, KK, & SIM C untuk memindai isi data secara instan.</div>
                     </div>
-                    <!-- Success State -->
-                    <div class="upload-success-state">
-                      <button type="button" class="upload-remove-btn" title="Hapus KTP">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                      </button>
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                      </div>
-                      <div class="upload-file-name">-</div>
-                      <div class="upload-file-size">-</div>
-                      <div class="upload-success-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Berhasil
-                      </div>
-                    </div>
-                    <div class="upload-preview hidden" id="previewKTP"></div>
                   </div>
-                </div>
-
-                <!-- KK Upload -->
-                <div class="upload-zone-wrapper">
-                  <label class="form-label">Kartu Keluarga (KK) <span class="required">*</span></label>
-                  <div class="upload-zone" id="zoneKK">
-                    <input type="file" id="uploadKK" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
-                    <!-- Default State -->
-                    <div class="upload-default-state">
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      </div>
-                      <div class="upload-title">Pilih / Seret KK</div>
-                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                  <div class="radio-card" id="manualSelectorCard" style="border-width: 1.5px;">
+                    <input type="radio" name="input_method" id="methodManual" value="manual" style="margin-top:2px">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title" style="font-size:13.5px">Pengisian Manual (Ketik Sendiri)</div>
+                      <div class="radio-card-desc" style="font-size:11px">Isi formulir biodata dan nomor dokumen secara konvensional.</div>
                     </div>
-                    <!-- Success State -->
-                    <div class="upload-success-state">
-                      <button type="button" class="upload-remove-btn" title="Hapus KK">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                      </button>
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                      </div>
-                      <div class="upload-file-name">-</div>
-                      <div class="upload-file-size">-</div>
-                      <div class="upload-success-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Berhasil
-                      </div>
-                    </div>
-                    <div class="upload-preview hidden" id="previewKK"></div>
-                  </div>
-                </div>
-
-                <!-- SIM Upload -->
-                <div class="upload-zone-wrapper">
-                  <label class="form-label">SIM C Aktif <span class="required">*</span></label>
-                  <div class="upload-zone" id="zoneSIM">
-                    <input type="file" id="uploadSIM" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
-                    <!-- Default State -->
-                    <div class="upload-default-state">
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      </div>
-                      <div class="upload-title">Pilih / Seret SIM C</div>
-                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
-                    </div>
-                    <!-- Success State -->
-                    <div class="upload-success-state">
-                      <button type="button" class="upload-remove-btn" title="Hapus SIM C">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                      </button>
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                      </div>
-                      <div class="upload-file-name">-</div>
-                      <div class="upload-file-size">-</div>
-                      <div class="upload-success-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Berhasil
-                      </div>
-                    </div>
-                    <div class="upload-preview hidden" id="previewSIM"></div>
-                  </div>
-                </div>
-
-                <!-- STNK Upload -->
-                <div class="upload-zone-wrapper">
-                  <label class="form-label">STNK Motor <span style="font-weight: 500; font-size: 11.5px; color: var(--color-muted);">(Opsional)</span></label>
-                  <div class="upload-zone" id="zoneSTNK">
-                    <input type="file" id="uploadSTNK" accept=".jpg,.jpeg,.png,.pdf" class="hidden">
-                    <!-- Default State -->
-                    <div class="upload-default-state">
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      </div>
-                      <div class="upload-title">Pilih / Seret STNK</div>
-                      <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
-                    </div>
-                    <!-- Success State -->
-                    <div class="upload-success-state">
-                      <button type="button" class="upload-remove-btn" title="Hapus STNK">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                      </button>
-                      <div class="upload-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                      </div>
-                      <div class="upload-file-name">-</div>
-                      <div class="upload-file-size">-</div>
-                      <div class="upload-success-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Berhasil
-                      </div>
-                    </div>
-                    <div class="upload-preview hidden" id="previewSTNK"></div>
                   </div>
                 </div>
               </div>
 
-              <!-- STNK Badge Info (Di bawah Grid) -->
-              <div class="stnk-badge-info" style="margin-top: 12px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>Mengunggah STNK sekarang akan mempermudah dan mempercepat proses verifikasi di posko. Jika belum diunggah, Anda **wajib membawa STNK asli** saat verifikasi langsung di stasiun.</span>
+              <!-- Container Pembungkus Dinamis (Urutan diatur oleh JS) -->
+              <div id="dynamicStep2Wrapper" style="display: flex; flex-direction: column; gap: 28px;">
+
+                <!-- SEKSI UGGAH DOKUMEN (Atas untuk OCR, Bawah untuk Manual) -->
+                <div id="documentUploadSection" style="display: flex; flex-direction: column; gap: 16px; order: 1;">
+                  <div class="form-step-sub" id="uploadSubHeader" style="margin-bottom: 0; padding-bottom: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Unggah Dokumen Verifikasi (Maksimal 2 MB per file)
+                  </div>
+
+                  <div class="form-grid-3" id="uploadGridStep2">
+                    <!-- KTP Upload -->
+                    <div class="upload-zone-wrapper">
+                      <label class="form-label">Kartu Tanda Penduduk (KTP) <span class="required">*</span></label>
+                      <div class="upload-zone" id="zoneKTP" style="position: relative; overflow: hidden;">
+                        <input type="file" id="uploadKTP" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                        
+                        <!-- Scanner Overlay -->
+                        <div class="ocr-scanner-overlay hidden" id="scannerKTP">
+                          <div class="ocr-scanner-line"></div>
+                          <div class="ocr-scanner-text">Memindai KTP...</div>
+                        </div>
+
+                        <!-- Default State -->
+                        <div class="upload-default-state">
+                          <div class="upload-icon-wrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                          </div>
+                          <div class="upload-title">Pilih / Seret KTP</div>
+                          <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                        </div>
+                        <!-- Success State -->
+                        <div class="upload-success-state">
+                          <button type="button" class="upload-remove-btn" title="Hapus KTP">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                          </button>
+                          <div class="upload-icon-wrap" style="margin-bottom:6px">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          </div>
+                          <div class="upload-file-name" style="font-size:11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">-</div>
+                          <div class="upload-file-size" style="font-size:10px; margin-bottom:4px">-</div>
+                          
+                          <!-- Scan OCR Trigger Button -->
+                          <button type="button" class="btn btn-xs btn-primary ocr-trigger-btn" id="ocrKTPBtn" style="margin-bottom:6px; font-size:11px; height:24px; padding:0 8px; font-family:var(--font-ui)">
+                            Pindai KTP
+                          </button>
+
+                          <div class="upload-success-badge" style="margin-top:0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            Berhasil
+                          </div>
+                        </div>
+                        <div class="upload-preview hidden" id="previewKTP"></div>
+                      </div>
+                    </div>
+
+                    <!-- KK Upload -->
+                    <div class="upload-zone-wrapper">
+                      <label class="form-label">Kartu Keluarga (KK) <span class="required">*</span></label>
+                      <div class="upload-zone" id="zoneKK" style="position: relative; overflow: hidden;">
+                        <input type="file" id="uploadKK" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                        
+                        <!-- Scanner Overlay -->
+                        <div class="ocr-scanner-overlay hidden" id="scannerKK">
+                          <div class="ocr-scanner-line"></div>
+                          <div class="ocr-scanner-text">Memindai KK...</div>
+                        </div>
+
+                        <!-- Default State -->
+                        <div class="upload-default-state">
+                          <div class="upload-icon-wrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                          </div>
+                          <div class="upload-title">Pilih / Seret KK</div>
+                          <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                        </div>
+                        <!-- Success State -->
+                        <div class="upload-success-state">
+                          <button type="button" class="upload-remove-btn" title="Hapus KK">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                          </button>
+                          <div class="upload-icon-wrap" style="margin-bottom:6px">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          </div>
+                          <div class="upload-file-name" style="font-size:11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">-</div>
+                          <div class="upload-file-size" style="font-size:10px; margin-bottom:4px">-</div>
+                          
+                          <!-- Scan OCR Trigger Button -->
+                          <button type="button" class="btn btn-xs btn-primary ocr-trigger-btn" id="ocrKKBtn" style="margin-bottom:6px; font-size:11px; height:24px; padding:0 8px; font-family:var(--font-ui)">
+                            Pindai KK
+                          </button>
+
+                          <div class="upload-success-badge" style="margin-top:0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            Berhasil
+                          </div>
+                        </div>
+                        <div class="upload-preview hidden" id="previewKK"></div>
+                      </div>
+                    </div>
+
+                    <!-- SIM Upload -->
+                    <div class="upload-zone-wrapper">
+                      <label class="form-label">SIM C Aktif <span class="required">*</span></label>
+                      <div class="upload-zone" id="zoneSIM" style="position: relative; overflow: hidden;">
+                        <input type="file" id="uploadSIM" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                        
+                        <!-- Scanner Overlay -->
+                        <div class="ocr-scanner-overlay hidden" id="scannerSIM">
+                          <div class="ocr-scanner-line"></div>
+                          <div class="ocr-scanner-text">Memindai SIM...</div>
+                        </div>
+
+                        <!-- Default State -->
+                        <div class="upload-default-state">
+                          <div class="upload-icon-wrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                          </div>
+                          <div class="upload-title">Pilih / Seret SIM C</div>
+                          <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                        </div>
+                        <!-- Success State -->
+                        <div class="upload-success-state">
+                          <button type="button" class="upload-remove-btn" title="Hapus SIM C">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                          </button>
+                          <div class="upload-icon-wrap" style="margin-bottom:6px">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          </div>
+                          <div class="upload-file-name" style="font-size:11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">-</div>
+                          <div class="upload-file-size" style="font-size:10px; margin-bottom:4px">-</div>
+                          
+                          <!-- Scan OCR Trigger Button -->
+                          <button type="button" class="btn btn-xs btn-primary ocr-trigger-btn" id="ocrSIMBtn" style="margin-bottom:6px; font-size:11px; height:24px; padding:0 8px; font-family:var(--font-ui)">
+                            Pindai SIM
+                          </button>
+
+                          <div class="upload-success-badge" style="margin-top:0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            Berhasil
+                          </div>
+                        </div>
+                        <div class="upload-preview hidden" id="previewSIM"></div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <!-- SEKSI BIDANG FORM INPUT (Atas untuk Manual, Bawah untuk OCR) -->
+                <div id="personalFieldsSection" style="display: flex; flex-direction: column; gap: 20px; order: 2;">
+                  <div class="form-step-sub" style="margin-bottom: 0; padding-bottom: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Profil Akun & Demografis
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label" for="namaLengkap">Nama Lengkap <span class="required">*</span></label>
+                      <div class="input-wrapper">
+                        <input type="text" class="form-input" id="namaLengkap" placeholder="Nama lengkap sesuai KTP" required>
+                      </div>
+                      <div id="ocrBadgeNama" class="ocr-badge hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg> Terbaca via OCR KTP (Dapat diedit)
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="noHandphone">No. Handphone (WA)</label>
+                      <input type="text" class="form-input" id="noHandphone" disabled>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="emailPeserta">Alamat Email</label>
+                      <input type="email" class="form-input" id="emailPeserta" disabled>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group">
+                      <label class="form-label" for="jenisKelamin">Jenis Kelamin <span class="required">*</span></label>
+                      <select class="form-select" id="jenisKelamin" required>
+                        <option value="" disabled selected>-- Pilih --</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="tanggalLahir">Tanggal Lahir <span class="required">*</span></label>
+                      <input type="date" class="form-input" id="tanggalLahir" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="profesi">Pekerjaan / Profesi <span class="required">*</span></label>
+                      <select class="form-select" id="profesi" required>
+                        <option value="" disabled selected>-- Pilih --</option>
+                        <option value="Karyawan Swasta">Karyawan Swasta</option>
+                        <option value="Pegawai Negeri (PNS)">Pegawai Negeri (PNS)</option>
+                        <option value="TNI / POLRI">TNI / POLRI</option>
+                        <option value="Wiraswasta">Wiraswasta</option>
+                        <option value="Petani / Nelayan">Petani / Nelayan</option>
+                        <option value="Mahasiswa / Pelajar">Mahasiswa / Pelajar</option>
+                        <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                        <option value="Lainnya">Lainnya</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label" for="nik">Nomor Induk Kependudukan (NIK KTP) <span class="required">*</span></label>
+                      <div class="input-wrapper">
+                        <input type="text" class="form-input" id="nik" maxlength="16" placeholder="16 Digit Angka NIK" pattern="[0-9]{16}" required>
+                      </div>
+                      <div id="ocrBadgeKTP" class="ocr-badge hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg> Terbaca via OCR KTP (Dapat diedit)
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="nomorKK">Nomor Kartu Keluarga (KK) <span class="required">*</span></label>
+                      <div class="input-wrapper">
+                        <input type="text" class="form-input" id="nomorKK" maxlength="16" placeholder="16 Digit Angka KK" pattern="[0-9]{16}" required>
+                      </div>
+                      <div id="ocrBadgeKK" class="ocr-badge hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg> Terbaca via OCR KK (Dapat diedit)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label" for="nomorSIMC">Nomor SIM C <span class="required">*</span></label>
+                      <div class="input-wrapper">
+                        <input type="text" class="form-input" id="nomorSIMC" placeholder="Contoh: 0912-3456-7890" required>
+                      </div>
+                      <div id="ocrBadgeSIM" class="ocr-badge hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg> Terbaca via OCR SIM C (Dapat diedit)
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="masaBerlakuSIMC">Masa Berlaku SIM C <span class="required">*</span></label>
+                      <input type="date" class="form-input" id="masaBerlakuSIMC" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="pendidikan">Pendidikan Terakhir <span class="required">*</span></label>
+                    <select class="form-select" id="pendidikan" required>
+                      <option value="" disabled selected>-- Pilih Pendidikan --</option>
+                      <option value="SD">SD Sederajat</option>
+                      <option value="SMP">SMP Sederajat</option>
+                      <option value="SMA / SMK">SMA / SMK Sederajat</option>
+                      <option value="Diploma (D1/D2/D3)">Diploma (D1/D2/D3)</option>
+                      <option value="Sarjana (D4/S1)">Sarjana (D4/S1)</option>
+                      <option value="Pascasarjana (S2/S3)">Pascasarjana (S2/S3)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-step-sub" style="margin-bottom: 0; padding-bottom: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Alamat Tinggal Sesuai KTP
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label" for="provinsiSelect">Provinsi <span class="required">*</span></label>
+                      <select class="form-select" id="provinsiSelect" required>
+                        <option value="" disabled selected>-- Pilih Provinsi --</option>
+                      </select>
+                      <input type="hidden" id="provinsiValue">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="kabupatenSelect">Kabupaten / Kota <span class="required">*</span></label>
+                      <select class="form-select" id="kabupatenSelect" disabled required>
+                        <option value="" disabled selected>-- Pilih Kabupaten/Kota --</option>
+                      </select>
+                      <input type="hidden" id="kabupatenValue">
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label class="form-label" for="kecamatanSelect">Kecamatan <span class="required">*</span></label>
+                      <select class="form-select" id="kecamatanSelect" disabled required>
+                        <option value="" disabled selected>-- Pilih Kecamatan --</option>
+                      </select>
+                      <input type="hidden" id="kecamatanValue">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="kelurahanSelect">Kelurahan <span class="required">*</span></label>
+                      <select class="form-select" id="kelurahanSelect" disabled required>
+                        <option value="" disabled selected>-- Pilih Kelurahan --</option>
+                      </select>
+                      <input type="hidden" id="kelurahanValue">
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label class="form-label" for="alamatLengkap">Alamat Jalan / RT / RW / No. Rumah <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="alamatLengkap" placeholder="Masukkan nama jalan lengkap, blok, nomor rumah, RT/RW secara mendetail" required></textarea>
+                  </div>
+                </div>
+
               </div>
 
             </div>
@@ -1401,63 +1520,153 @@
             <!-- STEP 3 PANEL: Informasi Kendaraan -->
             <!-- ======================================================= -->
             <div class="form-step-panel hidden" id="stepPanel3">
-              
-              <div class="form-step-sub">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                Spesifikasi Sepeda Motor
+
+              <!-- Selektor Metode Pengisian Kendaraan (Opsi OCR vs Manual) -->
+              <div class="form-group" style="margin-bottom: 24px;">
+                <label class="form-label" style="font-weight: 600; font-size: 14.5px; color: var(--gray-800);">Metode Pengisian Spesifikasi Motor <span class="required">*</span></label>
+                <div class="radio-card-grid">
+                  <div class="radio-card selected" id="ocrVehicleSelectorCard" style="border-width: 1.5px; cursor: pointer;">
+                    <input type="radio" name="vehicle_input_method" id="vehicleMethodOCR" value="ocr" checked style="margin-top:2px; pointer-events: none;">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title" style="font-size:13.5px">Pengisian Cepat via OCR STNK (Otomatis)</div>
+                      <div class="radio-card-desc" style="font-size:11px">Unggah foto STNK untuk memindai isi data motor secara otomatis.</div>
+                    </div>
+                  </div>
+                  <div class="radio-card" id="manualVehicleSelectorCard" style="border-width: 1.5px; cursor: pointer;">
+                    <input type="radio" name="vehicle_input_method" id="vehicleMethodManual" value="manual" style="margin-top:2px; pointer-events: none;">
+                    <div class="radio-card-content">
+                      <div class="radio-card-title" style="font-size:13.5px">Pengisian Manual (Ketik Sendiri)</div>
+                      <div class="radio-card-desc" style="font-size:11px">Isi spesifikasi motor dan nomor polisi secara konvensional.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div class="form-grid-3">
-                <div class="form-group col-span-2">
-                  <label class="form-label">Nomor Polisi (Plat Motor) <span class="required">*</span></label>
-                  <div class="license-plate-row">
-                    <!-- Kode Wilayah -->
-                    <select class="form-select" id="platWilayah" required>
-                      <option value="" disabled selected>-</option>
-                      <option value="B">B (Jakarta/Depok/Bekasi)</option>
-                      <option value="D">D (Bandung/Cimahi)</option>
-                      <option value="F">F (Bogor/Cianjur/Sukabumi)</option>
-                      <option value="E">E (Cirebon/Majalengka)</option>
-                      <option value="H">H (Semarang/Salatiga)</option>
-                      <option value="K">K (Pati/Kudus/Jepara)</option>
-                      <option value="AB">AB (Yogyakarta/Sleman)</option>
-                      <option value="AD">AD (Surakarta/Solo)</option>
-                      <option value="L">L (Surabaya)</option>
-                      <option value="W">W (Sidoarjo/Gresik)</option>
-                      <option value="N">N (Malang/Pasuruan)</option>
-                      <option value="Z">Z (Garut/Tasikmalaya)</option>
-                    </select>
-                    <!-- Angka Plat -->
-                    <input type="text" class="form-input" id="platNomor" placeholder="1234" maxlength="4" pattern="[0-9]{1,4}" required>
-                    <!-- Huruf Belakang -->
-                    <input type="text" class="form-input" id="platHuruf" placeholder="ABC" maxlength="3" pattern="[A-Za-z]{1,3}" required>
+              <!-- Container Pembungkus Dinamis Kendaraan (Urutan diatur oleh JS) -->
+              <div id="dynamicStep3Wrapper" style="display: flex; flex-direction: column; gap: 28px;">
+
+                <!-- Section 1: Unggah STNK (Atas untuk OCR, Bawah untuk Manual) -->
+                <div id="vehicleUploadSection" style="display: flex; flex-direction: column; gap: 16px; order: 1;">
+                  <div class="form-step-sub" style="margin-bottom: 0; padding-bottom: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Unggah STNK Sepeda Motor <span class="required">*</span>
+                  </div>
+
+                  <div class="upload-zone-wrapper">
+                    <div class="upload-zone" id="zoneSTNK" style="position: relative; overflow: hidden;">
+                      <input type="file" id="uploadSTNK" accept=".jpg,.jpeg,.png,.pdf" class="hidden" required>
+                      
+                      <!-- Default State -->
+                      <div class="upload-default-state">
+                        <div class="upload-icon-wrap">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <div class="upload-title">Pilih / Seret STNK Motor</div>
+                        <div class="upload-desc">JPG, PNG, PDF (Maks 2MB)</div>
+                      </div>
+                      
+                      <!-- Success State -->
+                      <div class="upload-success-state">
+                        <button type="button" class="upload-remove-btn" title="Hapus STNK">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                        <div class="upload-icon-wrap" style="margin-bottom:6px">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                        <div class="upload-file-name" style="font-size:11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div class="upload-file-size" style="font-size:10px; margin-bottom:4px">-</div>
+                        
+                        <div class="upload-success-badge" style="margin-top:0">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          Berhasil
+                        </div>
+                      </div>
+                      <div class="upload-preview hidden" id="previewSTNK"></div>
+                    </div>
+                  </div>
+
+                  <!-- STNK Badge Info -->
+                  <div class="stnk-badge-info" style="margin-top: 4px; margin-bottom: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>Mengunggah STNK wajib dilampirkan. Pastikan foto STNK terlihat jelas dan masa berlakunya masih aktif.</span>
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label class="form-label" for="merekMotor">Merek Motor <span class="required">*</span></label>
-                  <select class="form-select" id="merekMotor" required>
-                    <option value="" disabled selected>-- Pilih Merek --</option>
-                    <option value="Honda">Honda</option>
-                    <option value="Yamaha">Yamaha</option>
-                    <option value="Suzuki">Suzuki</option>
-                    <option value="Kawasaki">Kawasaki</option>
-                    <option value="Viar">Viar</option>
-                    <option value="Lainnya">Lainnya</option>
-                  </select>
-                </div>
-              </div>
+                <!-- Section 2: Spesifikasi Motor (Bawah untuk OCR, Atas untuk Manual) -->
+                <div id="vehicleFieldsSection" style="display: flex; flex-direction: column; gap: 20px; order: 2;">
+                  <div class="form-step-sub" style="margin-bottom: 0; padding-bottom: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                      <circle cx="5" cy="18" r="3" />
+                      <circle cx="19" cy="18" r="3" />
+                      <path d="M12 18V8H9" />
+                      <path d="M16 8l-4 10" />
+                      <path d="M19 15l-3-7H9L6 15" />
+                      <path d="M7 8h3" />
+                    </svg>
+                    Spesifikasi Sepeda Motor
+                  </div>
 
-              <div class="form-group">
-                <label class="form-label" for="kapasitasMesin">Kapasitas Mesin (CC) <span class="required">*</span></label>
-                <select class="form-select" id="kapasitasMesin" required>
-                  <option value="" disabled selected>-- Pilih Kapasitas Mesin --</option>
-                  <option value="Maksimal 110 cc">Maksimal 110 cc</option>
-                  <option value="115 cc - 125 cc">115 cc - 125 cc</option>
-                  <option value="135 cc - 150 cc">135 cc - 150 cc</option>
-                  <option value="155 cc - 200 cc">155 cc - 200 cc</option>
-                  <option value="Di atas 200 cc" disabled>Di atas 200 cc (TIDAK MEMENUHI SYARAT MOTIS)</option>
-                </select>
+                  <div class="form-grid-3">
+                    <div class="form-group col-span-2">
+                      <label class="form-label">Nomor Polisi (Plat Motor) <span class="required">*</span></label>
+                      <div class="license-plate-row">
+                        <!-- Kode Wilayah -->
+                        <select class="form-select" id="platWilayah" required>
+                          <option value="" disabled selected>-</option>
+                          <option value="B">B (Jakarta/Depok/Bekasi)</option>
+                          <option value="D">D (Bandung/Cimahi)</option>
+                          <option value="F">F (Bogor/Cianjur/Sukabumi)</option>
+                          <option value="E">E (Cirebon/Majalengka)</option>
+                          <option value="H">H (Semarang/Salatiga)</option>
+                          <option value="K">K (Pati/Kudus/Jepara)</option>
+                          <option value="AB">AB (Yogyakarta/Sleman)</option>
+                          <option value="AD">AD (Surakarta/Solo)</option>
+                          <option value="L">L (Surabaya)</option>
+                          <option value="W">W (Sidoarjo/Gresik)</option>
+                          <option value="N">N (Malang/Pasuruan)</option>
+                          <option value="Z">Z (Garut/Tasikmalaya)</option>
+                        </select>
+                        <!-- Angka Plat -->
+                        <input type="text" class="form-input" id="platNomor" placeholder="1234" maxlength="4" pattern="[0-9]{1,4}" required>
+                        <!-- Huruf Belakang -->
+                        <input type="text" class="form-input" id="platHuruf" placeholder="ABC" maxlength="3" pattern="[A-Za-z]{1,3}" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="merekMotor">Merek Motor <span class="required">*</span></label>
+                      <select class="form-select" id="merekMotor" required>
+                        <option value="" disabled selected>-- Pilih Merek --</option>
+                        <option value="Honda">Honda</option>
+                        <option value="Yamaha">Yamaha</option>
+                        <option value="Suzuki">Suzuki</option>
+                        <option value="Kawasaki">Kawasaki</option>
+                        <option value="Viar">Viar</option>
+                        <option value="Lainnya">Lainnya</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-3">
+                    <div class="form-group col-span-2">
+                      <label class="form-label" for="tipeMotor">Merek / Tipe Kendaraan</label>
+                      <input type="text" class="form-input" id="tipeMotor" placeholder="Contoh: HONDA VARIO 150">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="tahunMotor">Tahun Kendaraan</label>
+                      <input type="text" class="form-input" id="tahunMotor" placeholder="Contoh: 2021" maxlength="4">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="kapasitasMesin">Kapasitas Mesin (CC) <span class="required">*</span></label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                      <input type="number" class="form-input" id="kapasitasMesin" placeholder="Contoh: 150" min="1" required style="padding-right: 48px;">
+                      <span style="position: absolute; right: 16px; font-weight: 600; color: var(--gray-500); pointer-events: none;">cc</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               <div class="form-step-sub">
@@ -2073,6 +2282,8 @@
       platNomor: '',
       platHuruf: '',
       merekMotor: '',
+      tipeMotor: '',
+      tahunMotor: '',
       kapasitasMesin: '',
       fotoDepan: null,
       fotoBelakang: null,
@@ -2333,6 +2544,8 @@
       }
 
       if (step === 2) {
+        const namaLengkapVal = document.getElementById('namaLengkap').value.trim();
+        if (!namaLengkapVal) return "Nama Lengkap sesuai KTP wajib diisi.";
         if (!formState.jenisKelamin) return "Jenis Kelamin wajib dipilih.";
         if (!formState.tanggalLahir) return "Tanggal Lahir wajib ditentukan.";
         if (!formState.profesi) return "Pekerjaan/Profesi wajib dipilih.";
@@ -2364,13 +2577,27 @@
       }
 
       if (step === 3) {
+        // STNK (Mandatory)
+        if (!formState.files.uploadSTNK) return "Unggah STNK Sepeda Motor wajib dilampirkan.";
+
         if (!formState.platWilayah || !formState.platNomor || !formState.platHuruf) {
           return "Format Plat Nomor Polisi motor tidak lengkap.";
         }
         if (!/^\d{1,4}$/.test(formState.platNomor)) return "Angka Plat Nomor harus berupa 1-4 digit angka.";
         if (!/^[a-zA-Z]{1,3}$/.test(formState.platHuruf)) return "Huruf Plat Nomor harus berupa 1-3 karakter alfabet.";
         if (!formState.merekMotor) return "Merek motor wajib dipilih.";
-        if (!formState.kapasitasMesin) return "Kapasitas mesin motor wajib ditentukan.";
+        
+        // Kapasitas Mesin
+        if (!formState.kapasitasMesin) {
+          return "Kapasitas mesin motor wajib diisi.";
+        }
+        const ccVal = parseInt(formState.kapasitasMesin, 10);
+        if (isNaN(ccVal) || ccVal <= 0) {
+          return "Kapasitas mesin motor harus berupa angka positif.";
+        }
+        if (ccVal > 200) {
+          return "Kapasitas mesin melebihi 200 cc. Sepeda motor di atas 200 cc tidak memenuhi syarat program MOTIS.";
+        }
 
         // Photos
         if (!formState.fotoDepan) return "Foto motor tampak depan wajib diunggah.";
@@ -2449,6 +2676,8 @@
       formState.platNomor = document.getElementById('platNomor').value;
       formState.platHuruf = document.getElementById('platHuruf').value;
       formState.merekMotor = document.getElementById('merekMotor').value;
+      formState.tipeMotor = document.getElementById('tipeMotor').value;
+      formState.tahunMotor = document.getElementById('tahunMotor').value;
       formState.kapasitasMesin = document.getElementById('kapasitasMesin').value;
       formState.lokasiPenyerahan = document.getElementById('lokasiPenyerahan').value;
       formState.lokasiPengambilan = document.getElementById('lokasiPengambilan').value;
@@ -2917,12 +3146,261 @@
     setupUploadDragDrop('zoneSTNK', 'uploadSTNK', 'previewSTNK', 'files.uploadSTNK');
 
     // =========================================================================
+    // 6.5. OCR VS MANUAL SIMULATION SYSTEM LOGIC
+    // =========================================================================
+    const methodOCR = document.getElementById('methodOCR');
+    const methodManual = document.getElementById('methodManual');
+    const ocrSelectorCard = document.getElementById('ocrSelectorCard');
+    const manualSelectorCard = document.getElementById('manualSelectorCard');
+    const docUploadSec = document.getElementById('documentUploadSection');
+    const personalFieldsSec = document.getElementById('personalFieldsSection');
+    const step2ErrorBanner = document.getElementById('stepErrorBanner');
+
+    function toggleInputMethod(isOCR) {
+      if (isOCR) {
+        // Highlighting Selector Card
+        ocrSelectorCard.classList.add('selected');
+        manualSelectorCard.classList.remove('selected');
+        methodOCR.checked = true;
+
+        // Swapping DOM visual order (OCR: upload at top, personal fields at bottom)
+        docUploadSec.style.order = '1';
+        personalFieldsSec.style.order = '2';
+
+        // Show scanner trigger buttons
+        document.querySelectorAll('.ocr-trigger-btn').forEach(btn => {
+          btn.style.display = 'inline-block';
+        });
+      } else {
+        // Highlighting Selector Card
+        manualSelectorCard.classList.add('selected');
+        ocrSelectorCard.classList.remove('selected');
+        methodManual.checked = true;
+
+        // Swapping DOM visual order (Manual: personal fields at top, upload at bottom)
+        docUploadSec.style.order = '2';
+        personalFieldsSec.style.order = '1';
+
+        // Hide scanner trigger buttons
+        document.querySelectorAll('.ocr-trigger-btn').forEach(btn => {
+          btn.style.display = 'none';
+        });
+      }
+
+      // Hide error banner when switching methods
+      if (step2ErrorBanner) {
+        step2ErrorBanner.classList.add('hidden');
+      }
+    }
+
+    // Bind event listeners to Selector Cards
+    if (ocrSelectorCard) {
+      ocrSelectorCard.addEventListener('click', () => toggleInputMethod(true));
+    }
+    if (manualSelectorCard) {
+      manualSelectorCard.addEventListener('click', () => toggleInputMethod(false));
+    }
+    if (methodOCR) {
+      methodOCR.addEventListener('change', () => toggleInputMethod(true));
+    }
+    if (methodManual) {
+      methodManual.addEventListener('change', () => toggleInputMethod(false));
+    }
+
+    // Set initial layout
+    toggleInputMethod(true);
+
+    // OCR Simulation: Scanning Overlay & Mock Data Populating
+    function runOCRScanSimulation(btnId, scannerOverlayId, mockDataCallback) {
+      const btn = document.getElementById(btnId);
+      const scanner = document.getElementById(scannerOverlayId);
+      if (!btn || !scanner) return;
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent opening file selection again
+
+        // Show visual scanning overlay
+        scanner.classList.remove('hidden');
+
+        // Simulate 1.5s scanning process
+        setTimeout(() => {
+          // Hide visual scanner
+          scanner.classList.add('hidden');
+
+          // Populate mock fields
+          mockDataCallback();
+
+          // Smoothly remove green highlights on user interaction (focus/input/change)
+          checkStepValidation(currentStep);
+        }, 1500);
+      });
+    }
+
+    // Setup KTP OCR Simulator
+    runOCRScanSimulation('ocrKTPBtn', 'scannerKTP', () => {
+      const nikInput = document.getElementById('nik');
+      const nameInput = document.getElementById('namaLengkap');
+      
+      nikInput.value = '3174091208940003';
+      nameInput.value = 'ABDILLAH ROSYID';
+
+      nikInput.classList.add('ocr-highlight');
+      nameInput.classList.add('ocr-highlight');
+
+      document.getElementById('ocrBadgeKTP').classList.remove('hidden');
+      document.getElementById('ocrBadgeNama').classList.remove('hidden');
+
+      // Dispatch event to notify listeners
+      nikInput.dispatchEvent(new Event('input'));
+      nikInput.dispatchEvent(new Event('change'));
+      nameInput.dispatchEvent(new Event('input'));
+      nameInput.dispatchEvent(new Event('change'));
+    });
+
+    // Setup KK OCR Simulator
+    runOCRScanSimulation('ocrKKBtn', 'scannerKK', () => {
+      const kkInput = document.getElementById('nomorKK');
+      
+      kkInput.value = '3174090211120005';
+
+      kkInput.classList.add('ocr-highlight');
+
+      document.getElementById('ocrBadgeKK').classList.remove('hidden');
+
+      // Dispatch event to notify listeners
+      kkInput.dispatchEvent(new Event('input'));
+      kkInput.dispatchEvent(new Event('change'));
+    });
+
+    // Setup SIM OCR Simulator
+    runOCRScanSimulation('ocrSIMBtn', 'scannerSIM', () => {
+      const simInput = document.getElementById('nomorSIMC');
+      const simMasaInput = document.getElementById('masaBerlakuSIMC');
+      
+      simInput.value = '091234567890';
+      simMasaInput.value = '2030-12-31';
+
+      simInput.classList.add('ocr-highlight');
+      simMasaInput.classList.add('ocr-highlight');
+
+      document.getElementById('ocrBadgeSIM').classList.remove('hidden');
+
+      // Dispatch event to notify listeners
+      simInput.dispatchEvent(new Event('input'));
+      simInput.dispatchEvent(new Event('change'));
+      simMasaInput.dispatchEvent(new Event('input'));
+      simMasaInput.dispatchEvent(new Event('change'));
+    });
+
+    // Bind focus & interaction listeners to fade-out the green highlight
+    const ocrFields = ['nik', 'namaLengkap', 'nomorKK', 'nomorSIMC', 'masaBerlakuSIMC'];
+    ocrFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        const removeHighlight = () => {
+          if (el.classList.contains('ocr-highlight')) {
+            el.classList.remove('ocr-highlight');
+          }
+        };
+        el.addEventListener('focus', removeHighlight);
+        el.addEventListener('input', removeHighlight);
+        el.addEventListener('change', removeHighlight);
+      }
+    });
+
+    // Bind remove file listeners to reset mock data and badges if document gets deleted
+    const ktpRemoveBtn = document.querySelector('#zoneKTP .upload-remove-btn');
+    if (ktpRemoveBtn) {
+      ktpRemoveBtn.addEventListener('click', () => {
+        const nikInput = document.getElementById('nik');
+        const nameInput = document.getElementById('namaLengkap');
+        nikInput.value = '';
+        nameInput.value = '';
+        nikInput.classList.remove('ocr-highlight');
+        nameInput.classList.remove('ocr-highlight');
+        document.getElementById('ocrBadgeKTP').classList.add('hidden');
+        document.getElementById('ocrBadgeNama').classList.add('hidden');
+        nikInput.dispatchEvent(new Event('input'));
+        nameInput.dispatchEvent(new Event('input'));
+      });
+    }
+
+    const kkRemoveBtn = document.querySelector('#zoneKK .upload-remove-btn');
+    if (kkRemoveBtn) {
+      kkRemoveBtn.addEventListener('click', () => {
+        const kkInput = document.getElementById('nomorKK');
+        kkInput.value = '';
+        kkInput.classList.remove('ocr-highlight');
+        document.getElementById('ocrBadgeKK').classList.add('hidden');
+        kkInput.dispatchEvent(new Event('input'));
+      });
+    }
+
+    const simRemoveBtn = document.querySelector('#zoneSIM .upload-remove-btn');
+    if (simRemoveBtn) {
+      simRemoveBtn.addEventListener('click', () => {
+        const simInput = document.getElementById('nomorSIMC');
+        const simMasaInput = document.getElementById('masaBerlakuSIMC');
+        simInput.value = '';
+        simMasaInput.value = '';
+        simInput.classList.remove('ocr-highlight');
+        simMasaInput.classList.remove('ocr-highlight');
+        document.getElementById('ocrBadgeSIM').classList.add('hidden');
+        simInput.dispatchEvent(new Event('input'));
+        simMasaInput.dispatchEvent(new Event('input'));
+      });
+    }
+
+    // =========================================================================
     // 7. STEP 3 LOGIC: PLATE, CC, VEHICLE UPLOADS
     // =========================================================================
     setupUploadDragDrop('zoneFotoDepan', 'fotoDepan', 'previewFotoDepan', 'fotoDepan');
     setupUploadDragDrop('zoneFotoBelakang', 'fotoBelakang', 'previewFotoBelakang', 'fotoBelakang');
     setupUploadDragDrop('zoneFotoKanan', 'fotoKanan', 'previewFotoKanan', 'fotoKanan');
     setupUploadDragDrop('zoneFotoKiri', 'fotoKiri', 'previewFotoKiri', 'fotoKiri');
+
+    // Toggle input method for vehicles (OCR vs Manual) in Step 3
+    const vehicleMethodOCR = document.getElementById('vehicleMethodOCR');
+    const vehicleMethodManual = document.getElementById('vehicleMethodManual');
+    const ocrVehicleSelectorCard = document.getElementById('ocrVehicleSelectorCard');
+    const manualVehicleSelectorCard = document.getElementById('manualVehicleSelectorCard');
+    const vehicleUploadSection = document.getElementById('vehicleUploadSection');
+    const vehicleFieldsSection = document.getElementById('vehicleFieldsSection');
+
+    function toggleVehicleInputMethod(isOCR) {
+      if (isOCR) {
+        if (ocrVehicleSelectorCard) ocrVehicleSelectorCard.classList.add('selected');
+        if (manualVehicleSelectorCard) manualVehicleSelectorCard.classList.remove('selected');
+        if (vehicleMethodOCR) vehicleMethodOCR.checked = true;
+
+        if (vehicleUploadSection) vehicleUploadSection.style.order = '1';
+        if (vehicleFieldsSection) vehicleFieldsSection.style.order = '2';
+      } else {
+        if (manualVehicleSelectorCard) manualVehicleSelectorCard.classList.add('selected');
+        if (ocrVehicleSelectorCard) ocrVehicleSelectorCard.classList.remove('selected');
+        if (vehicleMethodManual) vehicleMethodManual.checked = true;
+
+        if (vehicleUploadSection) vehicleUploadSection.style.order = '2';
+        if (vehicleFieldsSection) vehicleFieldsSection.style.order = '1';
+      }
+    }
+
+    if (ocrVehicleSelectorCard) {
+      ocrVehicleSelectorCard.addEventListener('click', () => toggleVehicleInputMethod(true));
+    }
+    if (manualVehicleSelectorCard) {
+      manualVehicleSelectorCard.addEventListener('click', () => toggleVehicleInputMethod(false));
+    }
+    if (vehicleMethodOCR) {
+      vehicleMethodOCR.addEventListener('change', () => toggleVehicleInputMethod(true));
+    }
+    if (vehicleMethodManual) {
+      vehicleMethodManual.addEventListener('change', () => toggleVehicleInputMethod(false));
+    }
+
+    // Set initial layout
+    toggleVehicleInputMethod(true);
 
     // =========================================================================
     // 8. STEP 4 LOGIC: TICKET INTEGRATION & DYNAMIC PASSENGER GRID
@@ -3079,7 +3557,11 @@
       // 3. Vehicle
       const fullPlate = `${formState.platWilayah} ${formState.platNomor} ${formState.platHuruf}`.toUpperCase();
       document.getElementById('prevPlatMotor').innerHTML = `<code style="font-size:15px; font-weight:800; background:var(--gray-900); color:#fff; padding:4px 10px; border-radius:6px; font-family:var(--font-mono);">${fullPlate}</code>`;
-      document.getElementById('prevMerekCC').textContent = `${formState.merekMotor} – (${formState.kapasitasMesin})`;
+      let merekCCStr = `${formState.merekMotor}`;
+      if (formState.tipeMotor) merekCCStr += ` ${formState.tipeMotor}`;
+      merekCCStr += ` – (${formState.kapasitasMesin} cc)`;
+      if (formState.tahunMotor) merekCCStr += ` [Tahun: ${formState.tahunMotor}]`;
+      document.getElementById('prevMerekCC').textContent = merekCCStr;
       document.getElementById('prevLokasiLogistik').innerHTML = `Serah: <strong>Stasiun ${formState.lokasiPenyerahan}</strong><br>Ambil: <strong>Stasiun ${formState.lokasiPengambilan}</strong>`;
       document.getElementById('prevJadwalLogistik').innerHTML = `Drop-Off Motor: <strong>${formState.tanggalPenyerahan} (${formState.waktuPenyerahan})</strong><br>Verifikasi Dokumen: <strong>${formState.tanggalVerifikasi} (${formState.waktuVerifikasi})</strong>`;
       
